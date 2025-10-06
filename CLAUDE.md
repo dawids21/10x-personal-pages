@@ -1,6 +1,9 @@
-# AI Rules for {{project-name}}
+# AI Rules for Personal Pages
 
-{{project-description}}
+Being present online is becoming more important than ever. People should have a simple way to create a personal page
+describing their knowledge and experience without the need for deep technical expertise, such as setting up hosting,
+domain registration, and writing frontend code. Personal Pages will allow users to import a document with all the
+necessary information, and will then generate a personalized page with an easy-to-remember link using a chosen theme.
 
 ## Tech Stack
 
@@ -81,7 +84,7 @@ When modifying the directory structure, always update this section.
 - Leverage View Transitions API for smooth page transitions (use ClientRouter)
 - Use content collections with type safety for blog posts, documentation, etc.
 - Leverage Server Endpoints for API routes
-- Use POST, GET  - uppercase format for endpoint handlers
+- Use POST, GET - uppercase format for endpoint handlers
 - Use `export const prerender = false` for API routes
 - Use zod for input validation in API routes
 - Extract logic into services in `src/lib/services`
