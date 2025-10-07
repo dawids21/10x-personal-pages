@@ -196,14 +196,10 @@ Error messages must be:
 - Projects are defined through separate project YAML imports via the UI
 - Project order is determined by the user through the UI during page configuration
 
-### 3.6 Analytics and Logging
+### 3.6 Analytics and Metrics
 
-3.6.1 System Logging (Backend Only)
-System logs the following events for success metric tracking:
-
-- Account creation
-- Successful main page YAML imports with required fields
-- Project subpage creation
+3.6.1 Success Metrics Calculation
+Success metrics are calculated on-demand using SQL queries against existing database tables. No separate event logging is required.
 
 ### 3.7 Data Constraints and Validation
 
@@ -229,7 +225,7 @@ The following features are included in the initial release:
 - Real-time YAML validation with error feedback
 - Immediate publishing of changes (no preview)
 - Public page accessibility
-- Basic event logging for success metrics
+- SQL-based success metrics calculation
 - Account deletion with immediate data removal
 
 ### 4.2 Out of Scope for MVP
@@ -577,7 +573,7 @@ Metric 1: Page Setup Completion Rate
     - Required fields present (name minimum 1 character, bio minimum 1 character)
     - Page publicly accessible at chosen URL
 - Measurement: (Number of users with published page) / (Total number of registered users) × 100
-- Data Source: System logs tracking account creation and successful main YAML imports
+- Data Source: SQL query calculating users with published pages from database tables
 - Evaluation Period: Ongoing from MVP launch
 - Notes: Content quality is not evaluated; only presence of required fields matters
 
@@ -586,18 +582,16 @@ Metric 2: Project Subpage Adoption Rate
 - Target: 80% of users with published pages have at least one project subpage
 - Definition: User has successfully imported at least one valid project YAML
 - Measurement: (Number of users with ≥1 project) / (Number of users with published page) × 100
-- Data Source: System logs tracking project subpage creation events
+- Data Source: SQL query calculating users with at least one project from database tables
 - Evaluation Period: Ongoing from MVP launch
 - Notes: Number of projects beyond first project is not measured in MVP
 
-### 6.2 Data Collection and Logging
+### 6.2 Metrics Calculation Method
 
-System logs the following events to database:
+Success metrics are calculated on-demand using SQL queries that analyze existing database tables:
 
-- Account creation (timestamp, user_id)
-- Successful main page YAML import with required fields (timestamp, user_id, fields_present)
-- Project subpage creation (timestamp, user_id, project_id)
-- Account deletion (timestamp, user_id)
+- Page Setup Completion Rate: Calculated by querying user accounts and their associated published pages
+- Project Subpage Adoption Rate: Calculated by querying users with published pages and counting their associated projects
 
 ### 6.3 Non-Goals for MVP Metrics
 
