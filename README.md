@@ -1,26 +1,46 @@
-# 10x Astro Starter
+# Personal Pages
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+A web application that helps students and freelancers establish a professional online presence without requiring
+technical expertise. Create beautiful personal pages and project portfolios by simply importing YAML documents—no
+coding, hosting setup, or domain registration needed.
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+### Frontend
 
-## Prerequisites
+- **[Astro 5](https://astro.build/)** - Fast, efficient static site generation with minimal JavaScript
+- **[React 19](https://react.dev/)** - Interactive components where needed
+- **[TypeScript 5](https://www.typescriptlang.org/)** - Type-safe development
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first styling
+- **[Shadcn/ui](https://ui.shadcn.com/)** - Accessible React component library
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+### Backend
+
+- **[Supabase](https://supabase.com/)** - Comprehensive backend solution
+    - PostgreSQL database
+    - Built-in authentication
+    - Backend-as-a-Service SDK
+    - Open source and self-hostable
+
+### CI/CD & Hosting
+
+- **GitHub Actions** - Automated CI/CD pipelines
+- **Cloudflare** - Application hosting and deployment
 
 ## Getting Started
+
+### Prerequisites
+
+- Node.js `22.14.0` (as specified in `.nvmrc`)
+- npm or yarn package manager
+
+### Installation
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
+git clone https://github.com/dawids21/10x-personal-pages.git
+cd 10x-personal-pages
 ```
 
 2. Install dependencies:
@@ -29,66 +49,68 @@ cd 10x-astro-starter
 npm install
 ```
 
-3. Run the development server:
+3. Set up environment variables:
+
+```bash
+# Create a .env file with your Supabase credentials
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Build for production:
-
-```bash
-npm run build
-```
+The application will be available at `http://localhost:3000`
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+| Script             | Description                              |
+|--------------------|------------------------------------------|
+| `npm run dev`      | Start development server with hot reload |
+| `npm run build`    | Build production-ready application       |
+| `npm run preview`  | Preview production build locally         |
+| `npm run astro`    | Run Astro CLI commands                   |
+| `npm run lint`     | Check code for linting errors            |
+| `npm run lint:fix` | Automatically fix linting errors         |
+| `npm run format`   | Format code with Prettier                |
 
-## Project Structure
+## Project Scope
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+### MVP Features (In Scope)
 
-## AI Development Support
+**Authentication & Account Management**
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+- Email/password registration and login via Supabase Auth
+- Account deletion with immediate data removal
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+**Page Creation & Management**
 
-### Cursor IDE
+- YAML-based main page configuration (name, bio, skills, experience, education, contact)
+- YAML-based project subpage creation (name, description, tech stack, links, dates)
+- Template downloads for both main and project pages
+- Real-time YAML validation with clear error messages
+- Immediate publishing (no preview mode)
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+**Customization**
 
-### GitHub Copilot
+- Two pre-designed themes
+- Custom URL selection (3-30 characters, alphanumeric + hyphens)
+- Project ordering through UI
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
+**Public Access**
 
-### Windsurf
+- Publicly accessible pages without authentication
+- Project subpages with generated URLs
 
-The `.windsurfrules` file contains AI configuration for Windsurf.
+## Project Status
 
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+**Current Phase**: MVP Development
 
 ## License
 
 MIT
+
+---
+
+**Questions or Issues?** Please open an issue on GitHub or refer to the project documentation in the `docs/` directory.
