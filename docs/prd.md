@@ -87,8 +87,9 @@ Optional Fields:
 - education: Array of educational background
     - school_name: Institution name (maximum 100 characters)
     - school_description: Details about education (maximum 300 characters)
-- contact_info: Contact information (maximum 200 characters total, including phone and links)
-- projects: Array of project names that link to project subpages
+- contact_info: Array of contact information key-value pairs
+    - label: Contact type/label (maximum 50 characters)
+    - value: Contact value (maximum 100 characters)
 
 3.2.2 Project Subpage YAML Structure
 Required Fields:
