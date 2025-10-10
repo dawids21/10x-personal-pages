@@ -100,13 +100,13 @@
 - `POST /api/projects/{project_id}/data` - Validate and update project YAML data (200 OK)
     - Accepts YAML as plain text
     - Validates against Zod schema
-    - Updates `project_data` JSONB column
+    - Updates `data` JSONB column
 - `GET /api/projects/{project_id}/data` - Download project data as YAML
 
 ### Project Reordering
 
 - `PUT /api/projects/reorder` - Update display_order for multiple projects (200 OK)
-    - Body: `{ "projectOrders": [{ "project_id": "...", "display_order": 0 }, ...] }`
+    - Body: `{ "project_orders": [{ "project_id": "...", "display_order": 0 }, ...] }`
     - Validates all projects belong to authenticated user
     - Atomic transaction for all updates
 
