@@ -12,4 +12,9 @@ supabaseClient.auth
     email: "test@test.com",
     password: "test",
   })
+  .then(({ data }) => {
+    if (data.session) {
+      console.log(data.session.access_token);
+    }
+  })
   .catch(console.error);
