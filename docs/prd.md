@@ -2,611 +2,227 @@
 
 ## 1. Product Overview
 
-Personal Pages is a web application designed to help students and freelancers establish an online presence without
-requiring technical expertise. The platform enables users to create professional personal pages and project portfolios
-by importing YAML documents, eliminating the need for domain registration, hosting setup, or frontend development
-skills.
-
-Target Audience:
-
-- Students: Showcasing university experience and personal projects to increase hiring prospects
-- Freelancers: Demonstrating expertise and project portfolios to attract future clients and employers
-
-Technical Foundation:
-
-- Authentication: Supabase Auth
-- Development Timeline: 2-3 weeks (MVP)
-- Monetization: Free for all users (no monetization strategy in MVP)
-
-Core Value Proposition:
-Personal Pages provides a frictionless way to create and maintain a professional online presence through a simple
-YAML-based configuration system, paired with pre-designed themes and memorable URLs.
+Personal Pages is a web application designed to provide users with a simple, code-free way to create and host a personal
+portfolio page. The core principle is to allow users, primarily developers, to define their page content within a
+structured YAML document. The application will then parse this document and generate a clean, professional-looking
+webpage hosted on a unique, easy-to-remember URL. Users can manage their page, add project subpages, and select a visual
+theme through a simple administration dashboard. The project's goal is to offer a useful, free-forever tool to the
+developer community, removing the technical barriers of web hosting, domain registration, and frontend development for
+creating a personal online presence.
 
 ## 2. User Problem
 
-Establishing an online presence is increasingly important for career advancement and professional opportunities.
-However, creating a personal website currently requires:
-
-- Technical knowledge of HTML, CSS, and JavaScript
-- Understanding of web hosting and server configuration
-- Domain registration and DNS management
-- Ongoing maintenance and updates
-- Financial investment in hosting and domains
-
-These barriers prevent many students and freelancers from showcasing their skills, experience, and projects effectively
-online. They need a simple, fast solution that:
-
-- Requires no coding knowledge
-- Provides professional-looking results
-- Offers easy-to-share, memorable URLs
-- Allows quick updates without technical complications
-- Costs nothing to use
-
-Personal Pages solves this problem by abstracting away all technical complexity, requiring only basic YAML editing
-skills that can be learned in minutes.
+In today's tech industry, an online presence is crucial for professional visibility, especially for developers seeking
+new job opportunities. However, creating a personal portfolio page requires a significant investment of time and
+technical skills, including frontend development (HTML, CSS, JavaScript), setting up hosting, and registering a domain.
+This creates a barrier for many developers who want to showcase their experience but may lack the time, interest, or
+specific frontend skills to build a page from scratch. Personal Pages addresses this problem by offering a streamlined,
+configuration-based approach. It targets developers who want a professional-looking portfolio quickly, allowing them to
+focus on the content of their profile rather than the technical implementation of the website itself.
 
 ## 3. Functional Requirements
 
-### 3.1 Authentication and Account Management
+### 3.1. User Account Management
 
-3.1.1 User Registration
+* Users must be able to create an account and log in to the application.
+* Authentication will be implemented using Supabase Auth.
+* The system must securely manage user sessions, providing access to a personal administration dashboard only to
+  authenticated users.
 
-- Users can create accounts using Supabase Auth
-- Standard email/password authentication
-- No social login options in MVP
-- No two-factor authentication in MVP
+### 3.2. Page Generation and Content Management
 
-3.1.2 User Login and Session Management
+* The system will generate a main personal page for each user based on an imported YAML document.
+* Users can update their page content at any time by uploading a new YAML file, which will overwrite the previous
+  version. The system will not maintain a version history of the content.
+* The generated page will be publicly accessible via a unique URL in the format: `https://{APP_DOMAIN}/page/{USER_URL}`.
 
-- Users can log in to access their dashboard
-- Session management handled by Supabase Auth
-- Users can log out from their account
+### 3.3. Project Subpages
 
-3.1.3 Account Deletion
+* Users can create separate subpages for individual projects.
+* Each project subpage is created by uploading a dedicated project YAML file through the user dashboard.
+* The main personal page will automatically query and display a list of all associated projects, linking to their
+  respective subpages.
+* Projects are managed independently and are not defined within the main page's YAML file.
 
-- Users can permanently delete their account
-- Deletion is immediate with no grace period
-- All user data (page content, YAML configurations, projects) is removed immediately
-- Published page becomes inaccessible immediately
-- No data export functionality beyond standard YAML downloads during normal usage
+### 3.4. Page Administration Dashboard
 
-### 3.2 Personal Page Creation and Management
+Authenticated users will have access to a dashboard with the following capabilities:
 
-3.2.1 Main Page YAML Structure
-Required Fields:
+* Upload and update the main page YAML file.
+* Upload and manage project YAML files.
+* Change the personal page's URL slug (`USER_URL`). When the URL is changed, the old link will become inactive and
+  resolve to a 404 error page.
+* Select one of two available visual themes for the personal page. The themes will differ only in their color schemes.
+* Download a YAML template to guide content creation.
+* Download the currently configured YAML file for their main page.
 
-- name: User's full name (maximum 100 characters)
-- bio: Brief biography or description (maximum 500 characters)
+### 3.5. YAML Processing and Validation
 
-Optional Fields:
-
-- skills: Array of skill names (50 characters each)
-- experience: Array of work experiences
-    - job_title: Position title (maximum 100 characters)
-    - job_description: Role description (maximum 500 characters)
-- education: Array of educational background
-    - school_name: Institution name (maximum 100 characters)
-    - school_description: Details about education (maximum 300 characters)
-- contact_info: Array of contact information key-value pairs
-    - label: Contact type/label (maximum 50 characters)
-    - value: Contact value (maximum 100 characters)
-
-3.2.2 Project Subpage YAML Structure
-Required Fields:
-
-- name: Project name (maximum 100 characters)
-- description: Project description (maximum 500 characters)
-
-Optional Fields:
-
-- tech_stack: Technologies used (maximum 500 characters)
-- integrations: Third-party integrations (maximum 500 characters)
-- prod_link: URL to live production version
-- start_date: Project start date
-- end_date: Project end date
-
-3.2.3 YAML Import Functionality
-
-- Users can import YAML documents for main page configuration
-- Users can import separate YAML documents for each project subpage
-- Changes are applied immediately upon successful import (no preview mode)
-- Confirmation dialog required before publishing changes to live page
-- System validates YAML against defined schema
-- Invalid YAML triggers clear error messages
-
-3.2.4 YAML Download Functionality
-
-- Users can download empty YAML templates for main page
-- Users can download empty YAML templates for project pages
-- Users can download their current main page configuration as YAML
-- Users can download their current project configurations as YAML
-
-3.2.5 YAML Validation
-System validates and provides UI feedback for:
-
-- Missing required fields (name, bio for main page; name, description for projects)
-- Unrecognized fields not in schema
-- Field length violations (content exceeding maximum character limits)
-- Malformed YAML syntax
-
-Error messages must be:
-
-- Specific (identifying exact field and issue)
-- Clear (non-technical language where possible)
-- Actionable (indicating what needs to be corrected)
-
-### 3.3 Theme Selection
-
-3.3.1 Available Themes
-
-- Two themes available in MVP
-- Themes will be similar in MVP phase (detailed differentiation deferred to post-MVP)
-- Theme names and specific design characteristics to be defined during implementation
-
-3.3.2 Theme Management
-
-- Users can switch between available themes at any time
-- Theme changes apply immediately to published page
-- Theme selection persists across sessions
-
-### 3.4 URL Customization
-
-3.4.1 URL Format
-
-- Main page format: https://{APP_DOMAIN}/page/{USER_PAGE}
-- Project subpage format: https://{APP_DOMAIN}/page/{USER_PAGE}/project/{PROJECT_SLUG}
-
-3.4.2 URL Rules and Validation
-
-- Length: 3-30 characters
-- Allowed characters: lowercase alphanumeric (a-z, 0-9) and hyphens (-)
-- Cannot start or end with hyphen
-- No consecutive hyphens allowed
-- Must be unique across all users
-- Reserved words blocked (including but not limited to: admin, api, auth, help, about)
-
-3.4.3 URL Change Management
-
-- Users can change their URL at any time
-- No frequency restrictions or rate limiting in MVP
-- Uniqueness checking occurs after user confirms URL selection (not real-time)
-- Old URLs stop working immediately after change (no redirects in MVP)
-- System notifies user if selected URL is already taken or invalid
-
-3.4.4 Project URL Slug Generation
-
-- PROJECT_SLUG generation mechanism to be defined during implementation
-- Options include: derived from project name, user-specified, or auto-generated
-
-### 3.5 Page Publishing
-
-3.5.1 Real-Time Updates
-
-- All changes go live immediately upon successful import
-- No preview mode or staging environment in MVP
-- No version history or rollback capability
-
-3.5.2 Page Accessibility
-
-- Published pages are publicly accessible without authentication
-
-3.5.3 Project Linking
-
-- Main page displays clickable array of project names
-- Each project name links to corresponding project subpage
-- Projects are defined through separate project YAML imports via the UI
-- Project order is determined by the user through the UI during page configuration
-
-### 3.6 Analytics and Metrics
-
-3.6.1 Success Metrics Calculation
-Success metrics are calculated on-demand using SQL queries against existing database tables. No separate event logging is required.
-
-### 3.7 Data Constraints and Validation
-
-3.7.1 Concurrency Handling
-
-- Users only modify their own pages (no concurrent editing conflicts)
-- No locking mechanism required
-- Confirmation dialog required before changes are published
+* The application will provide a downloadable YAML template containing comments and examples to guide the user.
+* Upon upload, the system must validate every YAML file against a predefined schema for both structure and required
+  fields.
+* If validation fails, the system must provide clear, field-level error messages to the user (e.g., "'bio' is a required
+  field but was not found"). Error messages will not include line numbers.
+* A successful upload is defined as a file that passes all validation checks.
 
 ## 4. Product Boundaries
 
-### 4.1 In Scope for MVP
+### 4.1. In Scope (MVP)
 
-The following features are included in the initial release:
+* User account creation and administration via Supabase Auth.
+* A user dashboard to manage page settings and content.
+* Generation of a main personal page from an imported YAML file.
+* Generation of project subpages from separate YAML file imports.
+* Ability to change the page URL slug.
+* Ability to switch between two pre-defined, color-based themes.
+* Functionality to download a YAML template and the user's current YAML configuration.
+* Server-side validation of all uploaded YAML files with user-friendly error feedback.
 
-- Account creation and authentication
-- Main page creation through YAML import
-- Project subpage creation through YAML import
-- Two theme options for page styling
-- Custom URL selection and modification
-- YAML template downloads
-- Current configuration downloads as YAML
-- Real-time YAML validation with error feedback
-- Immediate publishing of changes (no preview)
-- Public page accessibility
-- SQL-based success metrics calculation
-- Account deletion with immediate data removal
+### 4.2. Out of Scope
 
-### 4.2 Out of Scope for MVP
-
-The following features are explicitly excluded from the initial release:
-
-Visual Customization:
-
-- Custom theme creation or modification
-- Theme customization options (colors, fonts, layouts)
-- Image or screenshot uploads and management
-- Logo or profile picture support
-
-Domain and SEO:
-
-- Custom domain forwarding (e.g., customdomain.com to {APP_DOMAIN}/page/{USER_PAGE})
-- Advanced SEO tools or meta tag customization
-- Sitemap generation
-- Search engine submission assistance
-
-Content Management:
-
-- Visual form-based editor for page content
-- Preview mode before publishing changes
-- Version history or rollback capability
-- Draft saving functionality
-- Content scheduling
-
-URL Management:
-
-- Redirects from old URLs after URL changes
-- Real-time URL availability checking during typing
-- URL change frequency limits or rate limiting
-
-User Experience:
-
-- Onboarding tutorials or wizards
-- Help center or documentation
-- In-app guidance or tooltips
-- Email notifications
-- Success messages or confirmations (beyond basic validation)
-
-Analytics and Insights:
-
-- User-facing analytics dashboard
-- Page view statistics
-- Visitor demographics or behavior tracking
-- Traffic source information
-
-Account Management:
-
-- Social login options (Google, GitHub, LinkedIn)
-- Two-factor authentication
-- Account recovery grace period (deletion is immediate)
-- Password reset via security questions
-- Data export functionality (beyond standard YAML downloads)
-
-Advanced Features:
-
-- Multi-language support or internationalization
-- Collaboration features (multiple users per page)
-- Comments or feedback functionality
-- Integration with external services (LinkedIn, GitHub)
-- API access for programmatic updates
-- Mobile application
+* Creation or use of custom user-defined themes.
+* Uploading, hosting, or managing any binary assets like images or screenshots. The MVP YAML schema will not contain
+  fields for image URLs.
+* Support for custom domains (e.g., pointing `my-name.com` to the user's page).
+* Advanced SEO management tools.
+* An in-app editor for YAML content; all editing is done offline by the user.
+* Version history for page content.
 
 ## 5. User Stories
 
-### 5.1 Authentication and Account Management
+### US-001 - User Account Creation
 
-US-001
-Title: User Registration
-Description: As a new user, I want to create an account using my email and password, so that I can access the platform
-and create my personal page.
-Acceptance Criteria:
+- Description: As a new user, I want to create an account so that I can access the platform and create my personal page.
+- Acceptance Criteria:
+  * Given I am a new user on the landing page,
+  * When I choose to sign up,
+  * Then I am presented with the account creation interface provided by Supabase Auth.
+  * And upon successful creation, I am automatically logged in and redirected to my personal dashboard.
 
-- User can access registration page
-- User can enter email address and password
-- System validates email format
-- System validates password meets minimum requirements (as defined by Supabase Auth)
-- System creates new account upon successful validation
-- User receives confirmation of successful registration
-- User is logged in automatically after registration
-- System rejects duplicate email addresses with clear error message
+### US-002 - User Login
 
-US-002
-Title: User Login
-Description: As a registered user, I want to log in to my account using my credentials, so that I can manage my personal
-page.
-Acceptance Criteria:
+- Description: As a returning user, I want to log in to my account so that I can manage my personal page.
+- Acceptance Criteria:
+  * Given I am a returning user with an existing account,
+  * When I choose to log in,
+  * Then I am presented with the login interface.
+  * And upon successful authentication, I am redirected to my personal dashboard.
 
-- User can access login page
-- User can enter email and password
-- System validates credentials against stored user data
-- Successful login redirects user to dashboard/management area
-- Failed login displays clear error message
-- System maintains user session until logout or timeout
-- User cannot access management features without authentication
+### US-003 - Download YAML Template
 
-US-003
-Title: Account Deletion
-Description: As a user, I want to permanently delete my account and all associated data, so that I can remove my
-presence from the platform.
-Acceptance Criteria:
+- Description: As a new user on my dashboard, I want to download a YAML template so that I know the correct structure and fields for my personal page.
+- Acceptance Criteria:
+  * Given I am logged in and on my dashboard,
+  * When I click the "Download Template" button for the main page,
+  * Then a YAML file is downloaded to my device.
+  * And the file contains all possible fields with comments explaining their purpose.
 
-- User can access account deletion option in account settings
-- System displays warning about permanent deletion and data loss
-- User must confirm deletion intention
-- System immediately deletes all user data (page content, YAML configurations, projects)
-- Published page becomes inaccessible immediately after deletion
-- User's custom URL becomes available for other users
-- System terminates user session
-- User cannot log in with deleted account credentials
-- No data recovery option is available
+### US-004 - Upload Main Page YAML Successfully
 
-### 5.2 Main Page YAML Management
+- Description: As a user, I want to upload my completed main page YAML file to generate my personal page.
+- Acceptance Criteria:
+  * Given I am logged in and on my dashboard,
+  * When I select a valid YAML file and initiate the upload,
+  * Then the system validates the file successfully.
+  * And I receive a confirmation message that my page has been created/updated.
+  * And my personal page is now live at my designated URL.
 
-US-004
-Title: Download Main Page YAML Template
-Description: As a user, I want to download an empty YAML template for the main page, so that I can understand the
-required structure and fill in my information.
-Acceptance Criteria:
+### US-005 - Upload Main Page YAML with Errors
 
-- User can access template download option from dashboard
-- System provides downloadable YAML file with all field names
-- Template includes comments explaining required vs optional fields
-- Template includes character limit information for each field
-- Template follows valid YAML syntax
-- Downloaded file has appropriate file extension (.yaml or .yml)
+- Description: As a user, I want to see clear error messages if I upload a YAML file that is improperly formatted or missing required fields.
+- Acceptance Criteria:
+  * Given I am logged in and on my dashboard,
+  * When I attempt to upload a YAML file with missing required fields or incorrect structure,
+  * Then the system rejects the file.
+  * And I am shown a specific error message indicating which field is missing or invalid (e.g., "'bio' is a required field but was not found").
 
-US-005
-Title: Import Main Page YAML
-Description: As a user, I want to import a YAML document containing my personal information, so that my main page is
-created or updated with this content.
-Acceptance Criteria:
+### US-006 - Change Personal Page Theme
 
-- User can access YAML import functionality from dashboard
-- User can select YAML file from local file system
-- System validates YAML syntax
-- System validates required fields are present (name, bio)
-- System validates character limits for all fields
-- System displays confirmation dialog before applying changes
-- Upon confirmation, changes are applied immediately to live page
-- System displays success message after successful import
-- User's page is accessible at their custom URL after import
+- Description: As a user, I want to change the theme of my personal page to personalize its appearance.
+- Acceptance Criteria:
+  * Given I am logged in and have an active personal page,
+  * When I select one of the two available themes in my dashboard,
+  * Then the change is saved immediately.
+  * And when I visit my public page URL, the new color scheme is applied.
 
-US-006
-Title: Download Current Main Page Configuration
-Description: As a user, I want to download my current main page configuration as a YAML file, so that I can modify it
-locally and re-import it.
-Acceptance Criteria:
+### US-007 - Change Personal Page URL
 
-- User can access configuration download option from dashboard
-- System generates YAML file with current page configuration
-- Downloaded YAML includes all populated fields and values
-- Downloaded YAML is valid and can be re-imported without errors
-- File includes user's current content with proper formatting
-- Downloaded file has appropriate file extension (.yaml or .yml)
+- Description: As a user, I want to change the URL of my personal page so that it is more memorable or relevant.
+- Acceptance Criteria:
+  * Given I am logged in and on my dashboard,
+  * When I enter a new, available URL slug and save it,
+  * Then my page becomes immediately accessible at the new URL (`https://{APP_DOMAIN}/page/{NEW_URL}`).
+  * And I receive a confirmation message that the URL has been updated.
 
-US-007
-Title: Main Page YAML Validation
-Description: As a user, I want to receive clear error messages when importing YAML with missing required fields, fields
-exceeding character limits, unrecognized fields, or YAML with malformed syntax, so that
-I can correct my YAML and successfully create my page.
-Acceptance Criteria:
+### US-008 - Old URL Invalidation
 
-- System detects violation
-- System displays specific error message
-- Import is rejected until all errors are resolved
+- Description: As a user who has changed my page URL, I expect the old URL to no longer be active.
+- Acceptance Criteria:
+  * Given I have successfully changed my page's URL from `OLD_URL` to `NEW_URL`,
+  * When anyone (including me) tries to visit `https://{APP_DOMAIN}/page/{OLD_URL}`,
+  * Then they are shown a standard 404 "Not Found" page.
 
-### 5.3 Project Subpage Management
+### US-009 - Update Page by Re-uploading YAML
 
-US-008
-Title: Download Project YAML Template
-Description: As a user, I want to download an empty YAML template for project pages, so that I can understand the
-structure and create project subpages.
-Acceptance Criteria:
+- Description: As a user, I want to update the content on my page by uploading a modified YAML file.
+- Acceptance Criteria:
+  * Given I have an existing personal page and am logged in to my dashboard,
+  * When I upload a new, valid main page YAML file,
+  * Then the system overwrites my previous page data with the new content.
+  * And when I visit my public page URL, I see the updated information.
 
-- User can access project template download option from dashboard
-- System provides downloadable YAML file with project field names
-- Template includes comments explaining required vs optional fields
-- Template includes character limit information
-- Template includes examples for date fields and URL fields
-- Downloaded file has appropriate file extension (.yaml or .yml)
+### US-010 - Add a Project Subpage
 
-US-009
-Title: Import Project YAML
-Description: As a user, I want to import a YAML document for a project, so that I can add a new project subpage to my
-portfolio.
-Acceptance Criteria:
+- Description: As a user, I want to add a project to my profile by uploading a separate project YAML file.
+- Acceptance Criteria:
+  * Given I am logged in and on my dashboard,
+  * When I choose to add a project and upload a valid project YAML file,
+  * Then the system creates a new project subpage.
+  * And the new project appears in the projects list on my main personal page.
 
-- User can access project YAML import functionality
-- User can select YAML file from local file system
-- System validates YAML syntax
-- System validates required fields are present (name, description)
-- System validates character limits
-- System displays confirmation dialog before creating project
-- Upon confirmation, project subpage is created immediately
-- Project name appears in clickable project list on main page
-- Project subpage is accessible at generated URL
-- System displays success message after successful import
+### US-011 - View Generated Personal Page
 
-US-010
-Title: Download Current Project Configuration
-Description: As a user, I want to download the current configuration of a specific project as YAML, so that I can modify
-and update it.
-Acceptance Criteria:
+- Description: As a user, I want to easily view my public-facing personal page.
+- Acceptance Criteria:
+  * Given I am logged in to my dashboard,
+  * When I click on my personal page link (e.g., `{APP_DOMAIN}/page/my-page`),
+  * Then my public personal page opens in a new tab.
+  * And it correctly displays the content from my latest uploaded YAML file.
 
-- User can select specific project from list of projects
-- User can access download option for selected project
-- System generates YAML file with current project configuration
-- Downloaded YAML includes all populated fields for that project
-- Downloaded YAML is valid and can be re-imported
-- File includes project's current content with proper formatting
-- Downloaded file has appropriate file extension
+### US-012 - Download Current Configuration
 
-US-011
-Title: Update Existing Project via YAML Import
-Description: As a user, I want to update an existing project by importing a modified YAML file, so that I can keep my
-project information current.
-Acceptance Criteria:
+- Description: As a user, I want to download the YAML file that is currently powering my page so I can easily edit it.
+- Acceptance Criteria:
+  * Given I am logged in and have an active page,
+  * When I click the "Download Current YAML" button on my dashboard,
+  * Then a YAML file containing my current page's data is downloaded to my device.
 
-- User can select existing project to update
-- User can import YAML file for selected project
-- System validates YAML (same validation as new project)
-- System displays confirmation dialog showing this will update existing project
-- Upon confirmation, project content is updated immediately
-- Project URL remains unchanged (same PROJECT_SLUG)
-- Changes are reflected immediately on project subpage
-- Project name in main page list is updated if changed
+### US-013 - User Logout
 
-US-012
-Title: Project YAML Validation
-Description: As a user, I want to receive clear error messages when importing project YAML with missing required fields,
-fields
-exceeding character limits, unrecognized fields, or YAML with malformed syntax, so that
-I can correct my YAML and successfully create my page.
-Acceptance Criteria:
-
-- System detects violation
-- System displays specific error message
-- Import is rejected until all errors are resolved
-
-### 5.4 Theme Selection
-
-US-013
-Title: Select Page Theme
-Description: As a user, I want to select a theme for my personal page, so that it has the visual style I prefer.
-Acceptance Criteria:
-
-- User can select from two available themes
-- Selection can be made during initial setup or changed later
-- System applies selected theme immediately to published page
-- Theme change is visible immediately without delay
-- Theme selection persists across sessions
-- System displays confirmation of theme change
-
-### 5.5 URL Customization
-
-US-014
-Title: Select Custom URL
-Description: As a user, I want to choose a custom URL for my personal page, so that I have an easy-to-remember web
-address to share.
-Acceptance Criteria:
-
-- User can enter desired URL during initial setup
-- System validates URL length (3-30 characters)
-- System validates allowed characters (lowercase a-z, 0-9, hyphens)
-- System maintains list of reserved words (minimum: admin, api, auth, help, about)
-- System rejects URLs matching reserved words (case-insensitive)
-- System converts uppercase letters to lowercase automatically
-- Error messages specify which rule was violated
-- System checks URL uniqueness after user confirms selection
-- If URL is available, system assigns it to user's page
-- If URL is taken, system displays error and allows retry
-- Page becomes accessible at https://{APP_DOMAIN}/page/{USER_PAGE}
-- System displays user's URL clearly in dashboard
-
-### 5.6 Page Viewing and Access
-
-US-015
-Title: View Published Personal Page
-Description: As a visitor, I want to view someone's personal page without requiring authentication, so that I can learn
-about their experience and skills.
-Acceptance Criteria:
-
-- Published pages are publicly accessible without login
-- Page is accessible at https://{APP_DOMAIN}/page/{USER_PAGE}
-- Page displays all user's configured information (name, bio, optional fields)
-- Page uses user's selected theme
-- Page displays clickable list of project names
-- Page loads without errors
-- Page is responsive and viewable on different devices
-
-US-016
-Title: Access Non-Existent Page
-Description: As a visitor, I want to receive clear feedback when accessing a non-existent page, so that I know the URL
-is incorrect or the page has been removed.
-Acceptance Criteria:
-
-- Accessing non-existent user page displays appropriate error (404)
-- Error message is user-friendly
-- Error explains page may not exist or URL may be incorrect
-- System does not reveal whether username existed previously (privacy)
-- Error page follows site branding
-- Error page includes navigation to main site
-
-### 5.7 Edge Cases and Error Handling
-US-017
-Title: Handle Special Characters in Content
-Description: As a user, I want to include special characters in my content (quotes, apostrophes, etc.), so that I can
-write naturally.
-Acceptance Criteria:
-
-- System accepts special characters within character limits
-- YAML parser correctly handles quotes, apostrophes, line breaks
-- Special characters display correctly on published page
-- No encoding issues visible to visitors
-- System sanitizes content to prevent security issues (XSS)
-- User receives guidance if YAML escaping is needed
-
-US-018
-Title: Handle Project Array Ordering
-Description: As a user, I want to control the order my projects are displayed in, so that my portfolio has the logical structure I choose.
-Acceptance Criteria:
-
-- Users can reorder projects through the UI during page configuration
-- Projects are displayed in the user-defined order on main page
-- Order persists across page reloads
-- Order remains consistent for all visitors
-- Order does not change unexpectedly
+- Description: As a user, I want to log out of my account to end my session securely.
+- Acceptance Criteria:
+  * Given I am logged into the application,
+  * When I click the "Logout" button,
+  * Then my session is terminated.
+  * And I am redirected to the public landing page.
 
 ## 6. Success Metrics
 
-### 6.1 Primary Success Metrics
+The success of the Personal Pages MVP will be measured against the following key performance indicators, reflecting user
+adoption and engagement.
 
-The success of Personal Pages MVP will be measured against two primary metrics:
+### 6.1. Primary Metric: Successful Page Setup
 
-Metric 1: Page Setup Completion Rate
+* Target: 90% of users who sign up successfully set up their personal page.
+* Definition: A "successful setup" is defined as a user uploading their first valid main YAML file that passes all
+  system validations. This event marks the user's successful transition from account creation to core product usage.
+* Measurement: This will be measured by the ratio: (Number of unique users with at least one successful main YAML
+  upload) / (Total number of unique users who have signed up).
 
-- Target: 80% of registered users successfully set up their personal page
-- Definition: A successfully set up page includes:
-    - Account created
-    - Valid main page YAML imported
-    - Required fields present (name minimum 1 character, bio minimum 1 character)
-    - Page publicly accessible at chosen URL
-- Measurement: (Number of users with published page) / (Total number of registered users) × 100
-- Data Source: SQL query calculating users with published pages from database tables
-- Evaluation Period: Ongoing from MVP launch
-- Notes: Content quality is not evaluated; only presence of required fields matters
+### 6.2. Secondary Metric: Project Subpage Adoption
 
-Metric 2: Project Subpage Adoption Rate
-
-- Target: 80% of users with published pages have at least one project subpage
-- Definition: User has successfully imported at least one valid project YAML
-- Measurement: (Number of users with ≥1 project) / (Number of users with published page) × 100
-- Data Source: SQL query calculating users with at least one project from database tables
-- Evaluation Period: Ongoing from MVP launch
-- Notes: Number of projects beyond first project is not measured in MVP
-
-### 6.2 Metrics Calculation Method
-
-Success metrics are calculated on-demand using SQL queries that analyze existing database tables:
-
-- Page Setup Completion Rate: Calculated by querying user accounts and their associated published pages
-- Project Subpage Adoption Rate: Calculated by querying users with published pages and counting their associated projects
-
-### 6.3 Non-Goals for MVP Metrics
-
-The following are explicitly NOT measured in MVP:
-
-- User-facing analytics or page view counts
-- Visitor behavior or engagement metrics
-- Conversion rates (no monetization to convert to)
-- User satisfaction or NPS scores
-- Time spent on site
-- Traffic sources or referral data
-- SEO rankings or search visibility
-- Content quality metrics
-- Page load performance
-- Error rates (beyond basic logging)
-
-These may be considered for post-MVP iterations based on primary metric performance.
+* Target: 80% of active users have at least one project subpage.
+* Definition: An "active user" is a user who has successfully set up their main page. This metric measures the adoption
+  of a key feature designed for the target audience.
+* Measurement: This will be measured by the ratio: (Number of users with at least one successful project YAML
+  upload) / (Total number of users who have a successful main page setup).
