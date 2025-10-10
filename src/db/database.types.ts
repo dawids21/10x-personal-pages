@@ -53,6 +53,7 @@ export interface Database {
           data: Json | null;
           display_order: number;
           project_id: string;
+          project_name: string;
           updated_at: string;
           user_id: string;
         };
@@ -61,6 +62,7 @@ export interface Database {
           data?: Json | null;
           display_order?: number;
           project_id: string;
+          project_name: string;
           updated_at?: string;
           user_id: string;
         };
@@ -69,6 +71,7 @@ export interface Database {
           data?: Json | null;
           display_order?: number;
           project_id?: string;
+          project_name?: string;
           updated_at?: string;
           user_id?: string;
         };
