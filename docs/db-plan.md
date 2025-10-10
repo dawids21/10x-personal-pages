@@ -33,8 +33,9 @@ Stores project subpages for user portfolios.
 **Columns:**
 - `user_id` UUID NOT NULL - Foreign key to pages(user_id), part of composite PRIMARY KEY
 - `project_id` VARCHAR(100) NOT NULL - Server-generated slug from project name, part of composite PRIMARY KEY
+- `project_name` VARCHAR(100) NOT NULL - Human-readable project name
 - `display_order` INTEGER NOT NULL DEFAULT 0 CHECK (display_order >= 0) - User-defined ordering (0, 1, 2, 3...)
-- `data` JSONB NULL - Complete project YAML content (name, description, tech_stack, integrations, prod_link, dates)
+- `data` JSONB NULL - Complete project YAML content (description, tech_stack, integrations, prod_link, dates)
 - `created_at` TIMESTAMPTZ NOT NULL DEFAULT NOW() - Project creation timestamp
 - `updated_at` TIMESTAMPTZ NOT NULL DEFAULT NOW() - Last modification timestamp
 
