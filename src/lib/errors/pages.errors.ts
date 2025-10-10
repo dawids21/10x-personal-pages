@@ -40,3 +40,14 @@ export class InvalidYamlError extends Error {
     this.name = "InvalidYamlError";
   }
 }
+
+/**
+ * Error thrown when attempting to use a reserved URL.
+ * Reserved URLs are protected system paths that cannot be used for page URLs.
+ */
+export class ReservedUrlError extends Error {
+  constructor(message = "This URL is reserved and cannot be used") {
+    super(message);
+    this.name = "ReservedUrlError";
+  }
+}

@@ -3,6 +3,7 @@ import {
   InvalidYamlError,
   PageAlreadyExistsError,
   PageNotFoundError,
+  ReservedUrlError,
   UrlAlreadyTakenError,
 } from "../errors/pages.errors";
 
@@ -56,6 +57,18 @@ export function handleApiError(error: unknown): Response {
       JSON.stringify({
         error: {
           code: "INVALID_YAML",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof ReservedUrlError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "RESERVED_URL",
           message: error.message,
         },
       } as ErrorResponse),

@@ -66,6 +66,50 @@ export interface UpdatePageDataCommand {
   data: string;
 }
 
+/**
+ * Contact information entry
+ */
+export interface ContactInfo {
+  label: string;
+  value: string;
+}
+
+/**
+ * Experience entry
+ */
+export interface Experience {
+  job_title: string;
+  job_description?: string;
+}
+
+/**
+ * Education entry
+ */
+export interface Education {
+  school_title: string;
+  school_description?: string;
+}
+
+/**
+ * Skill entry
+ */
+export interface Skill {
+  name: string;
+}
+
+/**
+ * Page data structure
+ * Used for storing and retrieving page content
+ */
+export interface PageData {
+  name: string;
+  bio: string;
+  contact_info?: ContactInfo[];
+  experience?: Experience[];
+  education?: Education[];
+  skills?: Skill[];
+}
+
 // ============================================================================
 // Project DTOs
 // ============================================================================
