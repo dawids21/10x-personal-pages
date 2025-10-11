@@ -25,7 +25,7 @@ export function getProjectTemplate(): string {
     const templatePath = join(process.cwd(), "src/assets/templates/project-template.yaml");
     return readFileSync(templatePath, "utf-8");
   } catch (error) {
-    throw new Error("Failed to read project template file");
+    throw new Error(`Failed to read project template file ${error}`);
   }
 }
 
