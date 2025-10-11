@@ -241,9 +241,12 @@ export async function parseAndValidateProjectYaml(yamlString: string): Promise<P
     return projectDataSchema.parse(parsed);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      // Format Zod validation errors
-      const issues = error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
-      throw new InvalidYamlError(`YAML validation failed: ${issues}`);
+      // Format Zod validation errors into detailed issues array
+      const details = error.issues.map((e) => ({
+        field: e.path.join(".") || "root",
+        issue: e.message,
+      }));
+      throw new InvalidYamlError("The provided data is invalid.", details);
     }
     // Handle YAML parsing errors
     throw new InvalidYamlError(`Failed to parse YAML: ${error instanceof Error ? error.message : "Unknown error"}`);

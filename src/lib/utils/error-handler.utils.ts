@@ -59,6 +59,7 @@ export function handleApiError(error: unknown): Response {
         error: {
           code: "INVALID_YAML",
           message: error.message,
+          details: error.details,
         },
       } as ErrorResponse),
       { status: 400, headers: { "Content-Type": "application/json" } }
