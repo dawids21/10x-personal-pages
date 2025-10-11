@@ -177,6 +177,25 @@ export interface ReorderProjectsCommand {
   project_orders: ProjectOrderEntry[];
 }
 
+/**
+ * Project data structure
+ * Used for storing and retrieving project content
+ */
+export interface ProjectData {
+  /** Name of the project (required) */
+  name: string;
+  /** Description of the project (required) */
+  description: string;
+  /** Technology stack used in the project */
+  tech_stack?: string;
+  /** Production link/URL to the live project */
+  prod_link?: string;
+  /** Start date as Date object */
+  start_date?: Date;
+  /** End date as Date object */
+  end_date?: Date;
+}
+
 // ============================================================================
 // Error Response Types
 // ============================================================================

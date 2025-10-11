@@ -1,7 +1,17 @@
-import type { CreateProjectCommand, ProjectCreateResponseDto, ProjectDto, UpdateProjectNameCommand } from "@/types.ts";
+import type {
+  CreateProjectCommand,
+  ProjectCreateResponseDto,
+  ProjectData,
+  ProjectDto,
+  UpdateProjectNameCommand,
+} from "@/types.ts";
 import { PageNotFoundError } from "../errors/pages.errors";
 import { ProjectNotFoundError } from "../errors/projects.errors";
+import { InvalidYamlError } from "../errors/shared.errors";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { dump, load } from "js-yaml";
+import { projectDataSchema } from "../validators/projects.validators";
+import { z } from "zod";
 
 /**
  * Creates a new project for a user.
@@ -212,4 +222,107 @@ export async function deleteProject(supabase: SupabaseClient, userId: string, pr
   if (!data) {
     throw new ProjectNotFoundError();
   }
+}
+
+/**
+ * Parses YAML string and validates it against the project data schema.
+ *
+ * @param yamlString - The YAML string to parse and validate
+ * @returns Validated project data object
+ * @throws {InvalidYamlError} If YAML parsing or validation fails
+ */
+export async function parseAndValidateProjectYaml(yamlString: string): Promise<ProjectData> {
+  try {
+    // Parse YAML using safe load
+    const parsed = load(yamlString);
+
+    // Validate against schema and return
+    return projectDataSchema.parse(parsed);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      // Format Zod validation errors
+      const issues = error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
+      throw new InvalidYamlError(`YAML validation failed: ${issues}`);
+    }
+    // Handle YAML parsing errors
+    throw new InvalidYamlError(`Failed to parse YAML: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+}
+
+/**
+ * Updates a project's data.
+ *
+ * @param supabase - Supabase client
+ * @param userId - User ID
+ * @param projectId - Project ID slug
+ * @param data - Validated project data object
+ * @throws {ProjectNotFoundError} If project not found or not owned by user
+ * @throws {Error} For database errors
+ */
+export async function updateProjectData(
+  supabase: SupabaseClient,
+  userId: string,
+  projectId: string,
+  data: ProjectData
+): Promise<void> {
+  const { data: result, error } = await supabase
+    .from("projects")
+    .update({
+      data: data,
+    })
+    .eq("user_id", userId)
+    .eq("project_id", projectId)
+    .select("user_id")
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Database error while updating project data: ${error.message}`);
+  }
+
+  if (!result) {
+    throw new ProjectNotFoundError();
+  }
+}
+
+/**
+ * Retrieves a project's data.
+ *
+ * @param supabase - Supabase client
+ * @param userId - User ID
+ * @param projectId - Project ID slug
+ * @returns Project data object
+ * @throws {ProjectNotFoundError} If project not found, not owned by user, or has no data
+ * @throws {Error} For database errors
+ */
+export async function getProjectData(
+  supabase: SupabaseClient,
+  userId: string,
+  projectId: string
+): Promise<ProjectData> {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("data")
+    .eq("user_id", userId)
+    .eq("project_id", projectId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Database error while fetching project data: ${error.message}`);
+  }
+
+  if (!data || !data.data) {
+    throw new ProjectNotFoundError();
+  }
+
+  return data.data;
+}
+
+/**
+ * Converts a project data object to YAML string.
+ *
+ * @param data - Project data object
+ * @returns YAML string representation
+ */
+export function convertToYaml(data: ProjectData): string {
+  return dump(data);
 }

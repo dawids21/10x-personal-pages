@@ -31,17 +31,6 @@ export class PageNotFoundError extends Error {
 }
 
 /**
- * Error thrown when YAML data validation fails.
- * This will be used when YAML validation is implemented in the future.
- */
-export class InvalidYamlError extends Error {
-  constructor(message = "Invalid YAML syntax") {
-    super(message);
-    this.name = "InvalidYamlError";
-  }
-}
-
-/**
  * Error thrown when attempting to use a reserved URL.
  * Reserved URLs are protected system paths that cannot be used for page URLs.
  */

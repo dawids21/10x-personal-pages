@@ -1,12 +1,12 @@
 import type { ErrorResponse } from "@/types.ts";
 import {
-  InvalidYamlError,
   PageAlreadyExistsError,
   PageNotFoundError,
   ReservedUrlError,
   UrlAlreadyTakenError,
 } from "../errors/pages.errors";
 import { ProjectNotFoundError } from "../errors/projects.errors";
+import { InvalidYamlError } from "../errors/shared.errors";
 
 /**
  * Centralized error handler for API endpoints.

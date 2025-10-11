@@ -1,11 +1,11 @@
 import type { CreatePageCommand, PageCreateResponseDto, PageData, PageDto, UpdatePageThemeCommand } from "@/types.ts";
 import {
-  InvalidYamlError,
   PageAlreadyExistsError,
   PageNotFoundError,
   ReservedUrlError,
   UrlAlreadyTakenError,
 } from "../errors/pages.errors";
+import { InvalidYamlError } from "../errors/shared.errors";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { load, dump } from "js-yaml";
 import { pageDataSchema } from "../validators/pages.validators";
