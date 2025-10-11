@@ -1,0 +1,20 @@
+# Project Template
+# Fill in your project information below
+
+# Project name (required)
+name: ""
+
+# Project description (required)
+description: ""
+
+# Technology stack used (optional)
+tech_stack: ""
+
+# Production link (optional)
+prod_link: ""
+
+# Start date in YYYY-MM-DD format (optional)
+start_date: ""
+
+# End date in YYYY-MM-DD format (optional)
+end_date: ""

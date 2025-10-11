@@ -1,0 +1,29 @@
+# Personal Page Template
+# Fill in your information below
+
+# Your full name (required)
+name: ""
+
+# Short bio describing yourself (required)
+bio: ""
+
+# Contact information (optional)
+contact_info:
+  - label: "Email"
+    value: ""
+  - label: "Phone"
+    value: ""
+
+# Work experience (optional)
+experience:
+  - job_title: ""
+    job_description: ""
+
+# Education history (optional)
+education:
+  - school_title: ""
+    school_description: ""
+
+# Skills (optional)
+skills:
+  - name: ""
