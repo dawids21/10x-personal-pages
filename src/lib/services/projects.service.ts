@@ -3,6 +3,7 @@ import type {
   ProjectCreateResponseDto,
   ProjectData,
   ProjectDto,
+  ProjectOrderEntry,
   UpdateProjectNameCommand,
 } from "@/types.ts";
 import { PageNotFoundError } from "../errors/pages.errors";
@@ -325,4 +326,55 @@ export async function getProjectData(
  */
 export function convertToYaml(data: ProjectData): string {
   return dump(data);
+}
+
+/**
+ * Reorders multiple projects by updating their display_order values.
+ * Verifies all projects exist and belong to the user before updating.
+ *
+ * @param supabase - Supabase client
+ * @param userId - User ID
+ * @param projectOrders - Array of project IDs with new display orders
+ * @throws {ProjectNotFoundError} If any project not found or not owned by user
+ * @throws {Error} For database errors
+ */
+export async function reorderProjects(
+  supabase: SupabaseClient,
+  userId: string,
+  projectOrders: ProjectOrderEntry[]
+): Promise<void> {
+  // 1. Extract all project IDs
+  const projectIds = projectOrders.map((p) => p.project_id);
+
+  // 2. Fetch all projects to verify existence and ownership
+  const { data: existingProjects, error: fetchError } = await supabase
+    .from("projects")
+    .select("project_id")
+    .eq("user_id", userId)
+    .in("project_id", projectIds);
+
+  if (fetchError) {
+    throw new Error(`Database error while fetching projects: ${fetchError.message}`);
+  }
+
+  // 3. Check if all projects exist
+  const existingIds = new Set(existingProjects?.map((p) => p.project_id) || []);
+  const missingIds = projectIds.filter((id) => !existingIds.has(id));
+
+  if (missingIds.length > 0) {
+    throw new ProjectNotFoundError();
+  }
+
+  // 4. Update each project's display_order
+  for (const order of projectOrders) {
+    const { error: updateError } = await supabase
+      .from("projects")
+      .update({ display_order: order.display_order })
+      .eq("user_id", userId)
+      .eq("project_id", order.project_id);
+
+    if (updateError) {
+      throw new Error(`Database error while updating project: ${updateError.message}`);
+    }
+  }
 }

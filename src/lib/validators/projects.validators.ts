@@ -34,6 +34,33 @@ export const updateProjectDataSchema = z.object({
 });
 
 /**
+ * Validation schema for a single project order entry.
+ */
+const projectOrderEntrySchema = z.object({
+  project_id: z.string().min(1, "Project ID is required").max(100, "Project ID must be at most 100 characters"),
+  display_order: z.number().int("Display order must be an integer").nonnegative("Display order must be non-negative"),
+});
+
+/**
+ * Validation schema for reordering projects.
+ * Used in PUT /api/projects/reorder request validation.
+ */
+export const reorderProjectsSchema = z
+  .object({
+    project_orders: z.array(projectOrderEntrySchema).min(1, "At least one project is required"),
+  })
+  .refine(
+    (data) => {
+      const ids = data.project_orders.map((p) => p.project_id);
+      return ids.length === new Set(ids).size;
+    },
+    {
+      message: "Duplicate project_id values are not allowed",
+      path: ["project_orders"],
+    }
+  );
+
+/**
  * Validation schema for project data structure.
  * Used to validate parsed YAML content.
  */
