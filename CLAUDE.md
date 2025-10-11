@@ -92,6 +92,7 @@ When modifying the directory structure, always update this section.
 - Implement hybrid rendering with server-side rendering where needed
 - Use Astro.cookies for server-side cookie management
 - Leverage import.meta.env for environment variables
+- During local development app is available at localhost:3000
 
 ### Guidelines for React
 

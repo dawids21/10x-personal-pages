@@ -6,6 +6,7 @@ import {
   ReservedUrlError,
   UrlAlreadyTakenError,
 } from "../errors/pages.errors";
+import { ProjectNotFoundError } from "../errors/projects.errors";
 
 /**
  * Centralized error handler for API endpoints.
@@ -73,6 +74,18 @@ export function handleApiError(error: unknown): Response {
         },
       } as ErrorResponse),
       { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof ProjectNotFoundError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "PROJECT_NOT_FOUND",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 404, headers: { "Content-Type": "application/json" } }
     );
   }
 
