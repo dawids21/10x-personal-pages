@@ -11,7 +11,7 @@ export function getPageTemplate(): string {
     const templatePath = join(process.cwd(), "src/assets/templates/page-template.yaml");
     return readFileSync(templatePath, "utf-8");
   } catch (error) {
-    throw new Error("Failed to read page template file");
+    throw new Error(`Failed to read page template file ${error}`);
   }
 }
 
