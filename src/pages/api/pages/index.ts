@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { createPageSchema, updatePageThemeSchema } from "@/lib/validators/pages.validators.ts";
-import * as pagesService from "../../lib/services/pages.service";
+import * as pagesService from "@/lib/services/pages.service.ts";
 import type { CreatePageCommand, ErrorResponse, UpdatePageThemeCommand } from "@/types.ts";
 import { handleApiError } from "@/lib/utils/error-handler.utils.ts";
 
