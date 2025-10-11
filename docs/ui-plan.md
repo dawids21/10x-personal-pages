@@ -88,9 +88,9 @@ Global elements:
   - Projects list with inline actions and reorder controls.
 - Key view components (arranged as cards):
   - Page Settings Card:
-    - Input: URL slug + “Update URL” action (POST /api/pages/url)
-    - Select: Theme + “Save Theme” action (PUT /api/pages)
-    - LinkPreview: Public page link displayed directly under URL input
+    - Input: URL slug + "Update URL" action (POST /api/pages/url)
+    - Select: Theme + "Save Theme" action (PUT /api/pages)
+    - Link: Public page link displayed directly under URL input
   - Page Content Card:
     - Button: Download Template (GET /api/templates/page)
     - Button: Download Current YAML (GET /api/pages/data)
@@ -227,7 +227,6 @@ Cross-view reusable components:
 - FileUploadButton: Reads YAML file as text; disables during upload; shows spinner
 - ErrorList: Renders API validation errors (field + issue)
 - Spinner/Status: Loading indicators with role="status"
-- LinkPreview: Displays and copies public page URL
 - InlineEditText: Accessible inline edit for project names
 - ReorderControls: Up/Down arrows with aria-labels per item and keyboard operability
 - ProjectList / ProjectListItem: Inline controls (rename, upload/download YAML, reorder, delete)
@@ -268,7 +267,7 @@ User stories mapping (high level):
 - US-006: Change Theme → PUT /api/pages; success toast; public reflects
 - US-007/008: Change URL → POST /api/pages/url; new link shown; old URL 404 via SSR
 - US-010: Create Project via modal; upload project YAML; appears on main page
-- US-011: Click public link under URL input; opens /page/{user_url}
+- US-011: Click public page link under URL input; opens /page/{user_url} in new tab
 - US-012: Download Current YAML (page) → GET /api/pages/data
 - US-013: Logout → redirect to /
 
@@ -279,7 +278,7 @@ Explicit requirement-to-UI mapping:
 - Success feedback: Toasts on successful mutations across the app
 - Shared state: Only toasts and minimal shared flags via context; most state local with useState
 - First-time gating: /app conditional render based on GET /api/pages (404 → Initial Setup)
-- Public link visibility: LinkPreview under URL input in Page Settings
+- Public link visibility: Clickable link under URL input in Page Settings that opens in new tab
 - SSR public pages: /page/{user_url} and /page/{user_url}/{project_id} routes render from stored YAML
 
 Addressing user pain points:

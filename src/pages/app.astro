@@ -1,0 +1,72 @@
+---
+import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
+import type { PageDto } from "@/types";
+import "@/styles/global.css";
+
+// Check authentication
+const { data: userData, error: authError } = await Astro.locals.supabase.auth.getUser();
+
+if (authError || !userData?.user) {
+  return Astro.redirect("/");
+}
+
+// Fetch page data
+let pageData: PageDto | null = null;
+let fetchError: string | null = null;
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/pages`, {
+    headers: {
+      cookie: Astro.request.headers.get("cookie") || "",
+    },
+  });
+
+  if (response.status === 404) {
+    // User doesn't have a page yet - redirect to initial setup
+    // For now, we'll just show an error since InitialPageSetup isn't implemented yet
+    fetchError = "No page found. Please create a page first.";
+  } else if (response.status === 401) {
+    return Astro.redirect("/");
+  } else if (response.ok) {
+    pageData = await response.json();
+  } else {
+    fetchError = "Failed to load page data";
+  }
+} catch (err) {
+  console.error("Error fetching page data:", err);
+  fetchError = "Failed to load page data";
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Personal Pages</title>
+  </head>
+  <body>
+    {
+      fetchError ? (
+        <div class="flex min-h-screen items-center justify-center">
+          <div class="text-center">
+            <h1 class="mb-4 text-2xl font-bold">Error</h1>
+            <p class="text-muted-foreground">{fetchError}</p>
+            <a href="/" class="mt-4 inline-block text-primary hover:underline">
+              Go back to home
+            </a>
+          </div>
+        </div>
+      ) : pageData ? (
+        <AdminDashboard client:load initialPage={pageData} baseUrl={Astro.url.origin} />
+      ) : (
+        <div class="flex min-h-screen items-center justify-center">
+          <div class="text-center">
+            <div class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p class="text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      )
+    }
+  </body>
+</html>
