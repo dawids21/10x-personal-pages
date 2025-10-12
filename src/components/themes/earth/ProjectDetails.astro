@@ -1,0 +1,83 @@
+---
+import type { ProjectData } from "@/types";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+interface Props {
+  projectData: ProjectData;
+}
+
+const { projectData } = Astro.props;
+---
+
+<div class="space-y-6">
+  <!-- Description (always shown) -->
+  <Card>
+    <CardHeader>
+      <CardTitle>About</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p class="text-foreground leading-relaxed">{projectData.description}</p>
+    </CardContent>
+  </Card>
+
+  <!-- Tech Stack (conditional) -->
+  {
+    projectData.tech_stack && (
+      <Card>
+        <CardHeader>
+          <CardTitle>Technologies</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p class="text-foreground">{projectData.tech_stack}</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  <!-- Production Link (conditional) -->
+  {
+    projectData.prod_link && (
+      <Card>
+        <CardHeader>
+          <CardTitle>View Project</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <a
+            href={projectData.prod_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:underline break-all"
+            aria-label="Visit project website (opens in new tab)"
+          >
+            {projectData.prod_link}
+          </a>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  <!-- Dates (conditional) -->
+  {
+    (projectData.start_date || projectData.end_date) && (
+      <Card>
+        <CardHeader>
+          <CardTitle>Timeline</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {projectData.start_date && (
+            <p class="text-muted-foreground">
+              <span class="font-semibold">Started:</span>{" "}
+              <time datetime={projectData.start_date.toISOString()}>{projectData.start_date.toLocaleDateString()}</time>
+            </p>
+          )}
+          {projectData.end_date && (
+            <p class="text-muted-foreground">
+              <span class="font-semibold">Completed:</span>{" "}
+              <time datetime={projectData.end_date.toISOString()}>{projectData.end_date.toLocaleDateString()}</time>
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
+</div>

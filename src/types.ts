@@ -203,7 +203,7 @@ export interface ProjectData {
 /**
  * Theme type alias
  */
-export type Theme = 'ocean' | 'earth';
+export type Theme = "ocean" | "earth";
 
 /**
  * Complete view model for rendering the public main page
@@ -219,6 +219,24 @@ export interface PublicMainPageViewModel {
   theme: Theme;
   /** User's URL slug for constructing project links */
   userUrl: string;
+}
+
+/**
+ * Complete view model for rendering the public project page
+ * Aggregates all data needed for the project view
+ * This is the only prop passed to OceanProjectLayout / EarthProjectLayout for projects
+ */
+export interface PublicProjectPageViewModel {
+  /** Project content parsed from YAML */
+  project_data: ProjectData;
+  /** Theme identifier inherited from user's main page */
+  theme: Theme;
+  /** User's URL slug for constructing navigation links */
+  user_url: string;
+  /** Project's UUID from database */
+  project_id: string;
+  /** Project name from metadata (projects table) */
+  project_name: string;
 }
 
 // ============================================================================

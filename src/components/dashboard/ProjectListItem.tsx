@@ -60,6 +60,10 @@ export function ProjectListItem({
     showSuccess("Project renamed successfully");
   };
 
+  const handleDownloadTemplate = () => {
+    window.location.href = "/api/templates/project";
+  };
+
   const handleDownloadYaml = () => {
     window.location.href = `/api/projects/${project.project_id}/data`;
   };
@@ -107,6 +111,12 @@ export function ProjectListItem({
               </div>
 
               <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="default" onClick={handleDownloadTemplate}>
+                  Download Template
+                </Button>
+                <Button variant="outline" size="default" onClick={handleDownloadYaml}>
+                  Download YAML
+                </Button>
                 <FileUploadButton
                   onUpload={handleUploadYaml}
                   accept=".yaml,.yml"
@@ -115,9 +125,6 @@ export function ProjectListItem({
                 >
                   Upload YAML
                 </FileUploadButton>
-                <Button variant="outline" size="default" onClick={handleDownloadYaml}>
-                  Download YAML
-                </Button>
                 <Button variant="destructive" size="default" onClick={() => setShowDeleteConfirm(true)}>
                   Delete
                 </Button>

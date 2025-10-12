@@ -1,0 +1,57 @@
+---
+import type { PublicProjectPageViewModel } from "@/types";
+import "@/styles/themes/public-themes.css";
+import ProjectHeader from "./ProjectHeader.astro";
+import ProjectDetails from "./ProjectDetails.astro";
+
+interface Props extends PublicProjectPageViewModel {}
+
+const { project_data, user_url } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="theme-ocean">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{project_data.name} - Project</title>
+    <meta name="description" content={project_data.description} />
+
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content={`${project_data.name} - Project`} />
+    <meta property="og:description" content={project_data.description} />
+    <meta property="og:type" content="article" />
+  </head>
+  <body>
+    <nav class="border-b border-border bg-card" aria-label="Main navigation">
+      <div class="container mx-auto px-4 py-4">
+        <a
+          href="/"
+          class="text-lg font-semibold text-primary hover:text-primary/80 transition-colors"
+          aria-label="Return to home page"
+        >
+          Personal Pages
+        </a>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+      <a
+        href={`/page/${user_url}`}
+        class="inline-flex items-center text-primary hover:underline mb-6 transition-colors"
+        aria-label={`Return to ${user_url}'s page`}
+      >
+        ← Back to {user_url}'s page
+      </a>
+
+      <ProjectHeader projectData={project_data} />
+      <ProjectDetails projectData={project_data} />
+    </main>
+
+    <footer class="border-t border-border mt-16 py-8">
+      <div class="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <p>Powered by Personal Pages</p>
+      </div>
+    </footer>
+  </body>
+</html>

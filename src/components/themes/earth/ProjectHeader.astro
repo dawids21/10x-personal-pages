@@ -1,0 +1,13 @@
+---
+import type { ProjectData } from "@/types";
+
+interface Props {
+  projectData: ProjectData;
+}
+
+const { projectData } = Astro.props;
+---
+
+<header class="mb-8">
+  <h1 class="text-4xl font-bold text-foreground">{projectData.name}</h1>
+</header>

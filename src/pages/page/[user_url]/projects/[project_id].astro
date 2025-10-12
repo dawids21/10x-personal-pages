@@ -1,0 +1,95 @@
+---
+import type { PublicProjectPageViewModel, ProjectData, Theme } from "@/types";
+import OceanProjectLayout from "@/components/themes/ocean/OceanProjectLayout.astro";
+import EarthProjectLayout from "@/components/themes/earth/EarthProjectLayout.astro";
+
+const { user_url, project_id } = Astro.params;
+
+// Validate URL parameters
+if (!user_url || !project_id) {
+  console.error("Missing URL parameters:", { user_url, project_id });
+  return Astro.redirect("/404");
+}
+
+const supabase = Astro.locals.supabase;
+
+// Fetch page data to get theme and verify page exists
+const { data: pageData, error: pageError } = await supabase
+  .from("pages")
+  .select("user_id, url, theme")
+  .eq("url", user_url)
+  .maybeSingle();
+
+// Handle page not found
+if (pageError || !pageData) {
+  console.error("Page not found:", user_url, pageError);
+  return Astro.redirect("/404");
+}
+
+// Fetch project data
+const { data: projectData, error: projectError } = await supabase
+  .from("projects")
+  .select("user_id, project_id, project_name, data")
+  .eq("project_id", project_id)
+  .maybeSingle();
+
+// Handle project not found
+if (projectError || !projectData) {
+  console.error("Project not found:", project_id, projectError);
+  return Astro.redirect("/404");
+}
+
+// Validate ownership - project must belong to the page owner
+if (projectData.user_id !== pageData.user_id) {
+  console.error("Project ownership mismatch:", {
+    project_user_id: projectData.user_id,
+    page_user_id: pageData.user_id,
+  });
+  return Astro.redirect("/404");
+}
+
+// Validate data field exists
+if (!projectData.data) {
+  console.error("No data field for project:", project_id);
+  return Astro.redirect("/500");
+}
+
+// Parse and validate project data structure
+const parsedProjectData = projectData.data as unknown as ProjectData;
+
+if (!parsedProjectData.name || !parsedProjectData.description) {
+  console.error("Invalid project data structure for", project_id, {
+    hasName: !!parsedProjectData.name,
+    hasDescription: !!parsedProjectData.description,
+  });
+  return Astro.redirect("/500");
+}
+
+// Handle date parsing if dates are stored as strings
+if (parsedProjectData.start_date && typeof parsedProjectData.start_date === "string") {
+  const startDate = new Date(parsedProjectData.start_date);
+  parsedProjectData.start_date = isNaN(startDate.getTime()) ? undefined : startDate;
+}
+
+if (parsedProjectData.end_date && typeof parsedProjectData.end_date === "string") {
+  const endDate = new Date(parsedProjectData.end_date);
+  parsedProjectData.end_date = isNaN(endDate.getTime()) ? undefined : endDate;
+}
+
+// Determine theme (default to ocean if invalid)
+const theme = (pageData.theme === "earth" ? "earth" : "ocean") as Theme;
+
+// Build view model
+const viewModel: PublicProjectPageViewModel = {
+  project_data: parsedProjectData,
+  theme,
+  user_url: pageData.url,
+  project_id: projectData.project_id,
+  project_name: projectData.project_name,
+};
+
+// Select layout component based on theme
+const LayoutComponent = theme === "ocean" ? OceanProjectLayout : EarthProjectLayout;
+---
+
+<LayoutComponent {...viewModel} />
