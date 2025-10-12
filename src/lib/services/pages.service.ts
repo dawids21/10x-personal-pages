@@ -1,4 +1,4 @@
-import type { CreatePageCommand, PageCreateResponseDto, PageData, PageDto, UpdatePageThemeCommand } from "@/types.ts";
+import type { PageCreateResponseDto, PageData, PageDto, UpdatePageThemeCommand } from "@/types.ts";
 import {
   PageAlreadyExistsError,
   PageNotFoundError,
@@ -15,6 +15,9 @@ import { z } from "zod";
  * Creates a new page for a user.
  * Enforces one-to-one relationship (one page per user) and URL uniqueness.
  *
+ * @param supabase - Supabase client
+ * @param userId - User ID
+ * @param command - Page creation command (url, theme, and optional PageData object)
  * @throws {PageAlreadyExistsError} If user already has a page
  * @throws {UrlAlreadyTakenError} If URL is already taken by another user
  * @throws {Error} For other database errors
@@ -22,7 +25,7 @@ import { z } from "zod";
 export async function createPage(
   supabase: SupabaseClient,
   userId: string,
-  command: CreatePageCommand
+  command: { url: string; theme: string; data?: PageData }
 ): Promise<PageCreateResponseDto> {
   // Attempt to insert the new page
   const { data, error } = await supabase

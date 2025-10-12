@@ -51,11 +51,28 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // 3. Call service to create page
     const command: CreatePageCommand = validationResult.data;
-    const result = await pagesService.createPage(locals.supabase, user.id, command);
 
-    // 4. Return success response
+    // 3. Check if URL is reserved (throws ReservedUrlError if reserved)
+    pagesService.checkReservedUrl(command.url);
+
+    // 4. Check URL availability (throws UrlAlreadyTakenError if taken)
+    await pagesService.checkUrlAvailability(locals.supabase, command.url, user.id);
+
+    // 5. If YAML data provided, parse and validate it (throws InvalidYamlError if invalid)
+    let validatedData = undefined;
+    if (command.data) {
+      validatedData = await pagesService.parseAndValidateYaml(command.data);
+    }
+
+    // 6. Call service to create page with validated data
+    const result = await pagesService.createPage(locals.supabase, user.id, {
+      url: command.url,
+      theme: command.theme,
+      data: validatedData,
+    });
+
+    // 7. Return success response
     return new Response(JSON.stringify(result), {
       status: 201,
       headers: { "Content-Type": "application/json" },

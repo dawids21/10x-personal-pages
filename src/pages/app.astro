@@ -1,5 +1,6 @@
 ---
 import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
+import { InitialPageSetup } from "@/components/setup/InitialPageSetup";
 import type { PageDto } from "@/types";
 import "@/styles/global.css";
 
@@ -12,6 +13,7 @@ if (authError || !userData?.user) {
 
 // Fetch page data
 let pageData: PageDto | null = null;
+let showInitialSetup = false;
 let fetchError: string | null = null;
 
 try {
@@ -22,9 +24,8 @@ try {
   });
 
   if (response.status === 404) {
-    // User doesn't have a page yet - redirect to initial setup
-    // For now, we'll just show an error since InitialPageSetup isn't implemented yet
-    fetchError = "No page found. Please create a page first.";
+    // User doesn't have a page yet - show initial setup
+    showInitialSetup = true;
   } else if (response.status === 401) {
     return Astro.redirect("/");
   } else if (response.ok) {
@@ -57,6 +58,8 @@ try {
             </a>
           </div>
         </div>
+      ) : showInitialSetup ? (
+        <InitialPageSetup client:load baseUrl={Astro.url.origin} />
       ) : pageData ? (
         <AdminDashboard client:load initialPage={pageData} baseUrl={Astro.url.origin} />
       ) : (
