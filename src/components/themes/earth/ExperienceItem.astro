@@ -1,0 +1,15 @@
+---
+interface Props {
+  jobTitle: string;
+  jobDescription?: string;
+}
+
+const { jobTitle, jobDescription } = Astro.props;
+---
+
+<div class="mb-4 last:mb-0">
+  <h4 class="text-lg font-semibold text-foreground mb-1">{jobTitle}</h4>
+  {jobDescription && (
+    <p class="text-muted-foreground leading-relaxed">{jobDescription}</p>
+  )}
+</div>

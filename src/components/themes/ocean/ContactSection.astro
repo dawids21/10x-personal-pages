@@ -1,0 +1,30 @@
+---
+import type { ContactInfo } from '@/types';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+
+interface Props {
+  contactInfo: ContactInfo[];
+}
+
+const { contactInfo } = Astro.props;
+---
+
+<section class="mb-12" aria-labelledby="contact-heading">
+  <Card>
+    <CardHeader>
+      <CardTitle id="contact-heading">Contact Information</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <dl class="space-y-3">
+        {contactInfo.map((contact) => (
+          <div class="flex flex-col sm:flex-row sm:gap-4" key={contact.label}>
+            <dt class="font-semibold text-foreground min-w-[120px]">
+              {contact.label}:
+            </dt>
+            <dd class="text-muted-foreground break-words">{contact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </CardContent>
+  </Card>
+</section>

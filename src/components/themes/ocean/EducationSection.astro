@@ -1,0 +1,28 @@
+---
+import type { Education } from '@/types';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import EducationItem from './EducationItem.astro';
+
+interface Props {
+  education: Education[];
+}
+
+const { education } = Astro.props;
+---
+
+<section class="mb-12" aria-labelledby="education-heading">
+  <Card>
+    <CardHeader>
+      <CardTitle id="education-heading">Education</CardTitle>
+    </CardHeader>
+    <CardContent>
+      {education.map((edu) => (
+        <EducationItem
+          schoolTitle={edu.school_title}
+          schoolDescription={edu.school_description}
+          key={edu.school_title}
+        />
+      ))}
+    </CardContent>
+  </Card>
+</section>

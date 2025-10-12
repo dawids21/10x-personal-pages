@@ -197,6 +197,31 @@ export interface ProjectData {
 }
 
 // ============================================================================
+// ViewModels for Public Pages
+// ============================================================================
+
+/**
+ * Theme type alias
+ */
+export type Theme = 'ocean' | 'earth';
+
+/**
+ * Complete view model for rendering the public main page
+ * Aggregates all data needed for the view
+ * This is the only prop passed to OceanThemeLayout / EarthThemeLayout
+ */
+export interface PublicMainPageViewModel {
+  /** User's page content parsed from YAML */
+  pageData: PageData;
+  /** List of user's projects, ordered by display_order */
+  projects: ProjectDto[];
+  /** Theme identifier for selecting layout component */
+  theme: Theme;
+  /** User's URL slug for constructing project links */
+  userUrl: string;
+}
+
+// ============================================================================
 // Error Response Types
 // ============================================================================
 

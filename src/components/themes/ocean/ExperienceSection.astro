@@ -1,0 +1,28 @@
+---
+import type { Experience } from '@/types';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import ExperienceItem from './ExperienceItem.astro';
+
+interface Props {
+  experience: Experience[];
+}
+
+const { experience } = Astro.props;
+---
+
+<section class="mb-12" aria-labelledby="experience-heading">
+  <Card>
+    <CardHeader>
+      <CardTitle id="experience-heading">Experience</CardTitle>
+    </CardHeader>
+    <CardContent>
+      {experience.map((exp) => (
+        <ExperienceItem
+          jobTitle={exp.job_title}
+          jobDescription={exp.job_description}
+          key={exp.job_title}
+        />
+      ))}
+    </CardContent>
+  </Card>
+</section>

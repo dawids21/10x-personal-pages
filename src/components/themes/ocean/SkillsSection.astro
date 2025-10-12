@@ -1,0 +1,28 @@
+---
+import type { Skill } from '@/types';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+
+interface Props {
+  skills: Skill[];
+}
+
+const { skills } = Astro.props;
+---
+
+<section class="mb-12" aria-labelledby="skills-heading">
+  <Card>
+    <CardHeader>
+      <CardTitle id="skills-heading">Skills</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div class="flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <Badge variant="secondary" key={skill.name}>
+            {skill.name}
+          </Badge>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+</section>

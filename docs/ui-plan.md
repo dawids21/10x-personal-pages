@@ -135,14 +135,13 @@ Global elements:
 - Key information to display:
   - Name, bio, optional sections (skills, experience, education, contact), list of projects linking to subpages.
 - Key view components:
-  - PublicLayout
+  - PublicLayout (top bar with app name, click takes to landing page)
   - PageHeader (name, bio)
   - Sections: Skills, Experience, Education, Contact (conditionally rendered)
   - ProjectsListPublic (links to subpages)
-- UX, accessibility, and security considerations:
-  - SEO-friendly SSR; fast load.
-  - Semantic sections and headings; accessible link names.
-  - No admin controls; purely public content.
+- Structure of the view depends on the theme for user page (ocean/earth)
+- Create separate sets of components for each theme. For now they will differ only in the main color (blue/green).
+- For this view use copy of global.css matching theme
 
 5) Public Project Page (SSR)
 - View path: /page/{user_url}/{project_id}
@@ -151,12 +150,12 @@ Global elements:
 - Key information to display:
   - Name, description, tech stack, optional production link, dates.
 - Key view components:
-  - PublicLayout
+  - PublicLayout (top bar with app name, click takes to landing page)
   - ProjectHeader
   - ProjectDetails
-- UX, accessibility, and security considerations:
-  - Semantic content; accessible link texts.
-  - 404 if project not found.
+- Structure of the view depends on the theme for user page (ocean/earth)
+- Create separate sets of components for each theme. For now they will differ only in the main color (blue/green).
+- For this view use copy of global.css matching theme
 
 6) 404 Not Found
 - View path: 404
@@ -232,33 +231,6 @@ Cross-view reusable components:
 - ProjectList / ProjectListItem: Inline controls (rename, upload/download YAML, reorder, delete)
 - CreateProjectModal: Form to create a project; closes on success and refetches list
 
-Compatibility mapping to API:
-- Create Page: POST /api/pages (Initial Page Setup)
-- Get Page (gate): GET /api/pages (dashboard gating + Page Settings/Card data)
-- Update Theme: PUT /api/pages (Page Settings Card)
-- Update URL: POST /api/pages/url (Page Settings Card)
-- Page YAML: GET /api/pages/data (download), POST /api/pages/data (upload)
-- Projects: GET /api/projects (list), POST /api/projects (modal create; UI computes display_order = max + 1)
-- Project item operations: PUT /api/projects/{id} (rename), DELETE /api/projects/{id} (delete)
-- Project YAML: GET /api/projects/{id}/data (download), POST /api/projects/{id}/data (upload)
-- Reorder: PUT /api/projects/reorder (Save Order button)
-- Templates: GET /api/templates/{type} for page/project
-
-UX, accessibility, security baked-in:
-- Local isLoading/error per component; disabled controls during requests; clear error messaging
-- Validation is performed server-side; the UI surfaces error messages returned by the API
-- Keyboard support and ARIA roles for all interactive elements
-- Confirm dialogs for deletes and potentially destructive changes
-- No admin controls on public pages; all state-changing actions require auth
-- Avoid exposing sensitive data; rely on API responses and RLS for authorization
-
-Edge cases and error handling:
-- Graceful handling of 404 vs 500 for GET /api/pages to choose setup vs error
-- URL conflicts and reserved words clearly explained
-- YAML validation errors listed with fields; no line numbers
-- Atomic reorder via Save Order; Cancel/Reset to server order option recommended
-- Network loss disables actions and displays banner
-
 User stories mapping (high level):
 - US-001/002: Landing auth → /app
 - US-003: Dashboard “Download Template” (page) → GET /api/templates/page
@@ -270,22 +242,3 @@ User stories mapping (high level):
 - US-011: Click public page link under URL input; opens /page/{user_url} in new tab
 - US-012: Download Current YAML (page) → GET /api/pages/data
 - US-013: Logout → redirect to /
-
-Explicit requirement-to-UI mapping:
-- Offline YAML editing: FileUploadButton + Download buttons in Page Content and Project items
-- Field-level validation errors: ErrorList under respective upload areas
-- Project reordering: ReorderControls + Save Order button (single API call)
-- Success feedback: Toasts on successful mutations across the app
-- Shared state: Only toasts and minimal shared flags via context; most state local with useState
-- First-time gating: /app conditional render based on GET /api/pages (404 → Initial Setup)
-- Public link visibility: Clickable link under URL input in Page Settings that opens in new tab
-- SSR public pages: /page/{user_url} and /page/{user_url}/{project_id} routes render from stored YAML
-
-Addressing user pain points:
-- YAML complexity: Prominent template download and clear error messaging
-- Accidental reorders: Explicit Save Order and optional Reset to server order
-- Anxiety over destructive actions: ConfirmDialog with item names
-- Waiting/confusion during uploads: Spinners, disabled controls, and clear states
-- First-time ambiguity: Guided Initial Page Setup with minimal required inputs and template access
-
-This architecture ensures the UI meets product requirements, aligns with the defined API capabilities, and implements the planning session’s decisions with a focus on UX, accessibility, and security.

@@ -1,0 +1,72 @@
+---
+import type { PublicMainPageViewModel, PageData, Theme } from "@/types";
+import OceanThemeLayout from "@/components/themes/ocean/OceanThemeLayout.astro";
+import EarthThemeLayout from "@/components/themes/earth/EarthThemeLayout.astro";
+
+const { user_url } = Astro.params;
+
+if (!user_url) {
+  return Astro.redirect("/404");
+}
+
+const supabase = Astro.locals.supabase;
+
+// Fetch page data by URL
+const { data: pageData, error: pageError } = await supabase
+  .from("pages")
+  .select("user_id, url, theme, data")
+  .eq("url", user_url)
+  .maybeSingle();
+
+// Handle page not found
+if (pageError || !pageData) {
+  console.error("Page not found:", user_url, pageError);
+  return Astro.redirect("/404");
+}
+
+// Handle missing data field
+if (!pageData.data) {
+  console.error("No data field for page:", user_url);
+  return Astro.redirect("/500");
+}
+
+// Validate page data
+// The data field is stored as JSONB in the database, so it's already parsed as an object
+// We need to validate it has the required structure
+const parsedPageData = pageData.data as unknown as PageData;
+
+if (!parsedPageData.name || !parsedPageData.bio) {
+  console.error("Invalid page data structure for", user_url);
+  return Astro.redirect("/500");
+}
+
+// Fetch user's projects
+const { data: projectsData, error: projectsError } = await supabase
+  .from("projects")
+  .select("user_id, project_id, project_name, display_order")
+  .eq("user_id", pageData.user_id)
+  .order("display_order", { ascending: true });
+
+// Handle projects fetch failure gracefully (page still renders without projects)
+if (projectsError) {
+  console.warn("Could not fetch projects for user:", pageData.user_id, projectsError);
+}
+
+const projects = projectsData || [];
+
+// Determine theme (default to ocean if invalid)
+const theme = (pageData.theme === "earth" ? "earth" : "ocean") as Theme;
+
+// Build view model
+const viewModel: PublicMainPageViewModel = {
+  pageData: parsedPageData,
+  projects,
+  theme,
+  userUrl: pageData.url,
+};
+
+// Select layout component based on theme
+const LayoutComponent = theme === "ocean" ? OceanThemeLayout : EarthThemeLayout;
+---
+
+<LayoutComponent {...viewModel} />
