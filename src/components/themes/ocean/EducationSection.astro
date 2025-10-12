@@ -1,7 +1,7 @@
 ---
-import type { Education } from '@/types';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import EducationItem from './EducationItem.astro';
+import type { Education } from "@/types";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import EducationItem from "./EducationItem.astro";
 
 interface Props {
   education: Education[];
@@ -16,13 +16,15 @@ const { education } = Astro.props;
       <CardTitle id="education-heading">Education</CardTitle>
     </CardHeader>
     <CardContent>
-      {education.map((edu) => (
-        <EducationItem
-          schoolTitle={edu.school_title}
-          schoolDescription={edu.school_description}
-          key={edu.school_title}
-        />
-      ))}
+      {
+        education.map((edu) => (
+          <EducationItem
+            schoolTitle={edu.school_title}
+            schoolDescription={edu.school_description}
+            key={edu.school_title}
+          />
+        ))
+      }
     </CardContent>
   </Card>
 </section>

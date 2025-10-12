@@ -9,7 +9,5 @@ const { schoolTitle, schoolDescription } = Astro.props;
 
 <div class="mb-4 last:mb-0">
   <h4 class="text-lg font-semibold text-foreground mb-1">{schoolTitle}</h4>
-  {schoolDescription && (
-    <p class="text-muted-foreground leading-relaxed">{schoolDescription}</p>
-  )}
+  {schoolDescription && <p class="text-muted-foreground leading-relaxed">{schoolDescription}</p>}
 </div>

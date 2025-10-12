@@ -1,12 +1,12 @@
 ---
-import type { PublicMainPageViewModel } from '@/types';
-import '@/styles/themes/public-themes.css';
-import PageHeader from './PageHeader.astro';
-import SkillsSection from './SkillsSection.astro';
-import ExperienceSection from './ExperienceSection.astro';
-import EducationSection from './EducationSection.astro';
-import ContactSection from './ContactSection.astro';
-import ProjectsListPublic from './ProjectsListPublic.astro';
+import type { PublicMainPageViewModel } from "@/types";
+import "@/styles/themes/public-themes.css";
+import PageHeader from "./PageHeader.astro";
+import SkillsSection from "./SkillsSection.astro";
+import ExperienceSection from "./ExperienceSection.astro";
+import EducationSection from "./EducationSection.astro";
+import ContactSection from "./ContactSection.astro";
+import ProjectsListPublic from "./ProjectsListPublic.astro";
 
 interface Props extends PublicMainPageViewModel {}
 
@@ -42,25 +42,19 @@ const { pageData, projects, theme, userUrl } = Astro.props;
     <main class="container mx-auto px-4 py-8 max-w-4xl">
       <PageHeader name={pageData.name} bio={pageData.bio} />
 
-      {pageData.skills && pageData.skills.length > 0 && (
-        <SkillsSection skills={pageData.skills} />
-      )}
+      {pageData.skills && pageData.skills.length > 0 && <SkillsSection skills={pageData.skills} />}
 
-      {pageData.experience && pageData.experience.length > 0 && (
-        <ExperienceSection experience={pageData.experience} />
-      )}
+      {pageData.experience && pageData.experience.length > 0 && <ExperienceSection experience={pageData.experience} />}
 
-      {pageData.education && pageData.education.length > 0 && (
-        <EducationSection education={pageData.education} />
-      )}
+      {pageData.education && pageData.education.length > 0 && <EducationSection education={pageData.education} />}
 
-      {pageData.contact_info && pageData.contact_info.length > 0 && (
-        <ContactSection contactInfo={pageData.contact_info} />
-      )}
+      {
+        pageData.contact_info && pageData.contact_info.length > 0 && (
+          <ContactSection contactInfo={pageData.contact_info} />
+        )
+      }
 
-      {projects && projects.length > 0 && (
-        <ProjectsListPublic projects={projects} userUrl={userUrl} />
-      )}
+      {projects && projects.length > 0 && <ProjectsListPublic projects={projects} userUrl={userUrl} />}
     </main>
 
     <footer class="border-t border-border mt-16 py-8">
