@@ -20,12 +20,14 @@ const { data: pageData, error: pageError } = await supabase
 
 // Handle page not found
 if (pageError || !pageData) {
+  // eslint-disable-next-line no-console
   console.error("Page not found:", user_url, pageError);
   return Astro.redirect("/404");
 }
 
 // Handle missing data field
 if (!pageData.data) {
+  // eslint-disable-next-line no-console
   console.error("No data field for page:", user_url);
   return Astro.redirect("/500");
 }
@@ -36,6 +38,7 @@ if (!pageData.data) {
 const parsedPageData = pageData.data as unknown as PageData;
 
 if (!parsedPageData.name || !parsedPageData.bio) {
+  // eslint-disable-next-line no-console
   console.error("Invalid page data structure for", user_url);
   return Astro.redirect("/500");
 }
@@ -49,6 +52,7 @@ const { data: projectsData, error: projectsError } = await supabase
 
 // Handle projects fetch failure gracefully (page still renders without projects)
 if (projectsError) {
+  // eslint-disable-next-line no-console
   console.warn("Could not fetch projects for user:", pageData.user_id, projectsError);
 }
 

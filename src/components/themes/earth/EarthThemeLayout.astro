@@ -8,9 +8,9 @@ import EducationSection from "./EducationSection.astro";
 import ContactSection from "./ContactSection.astro";
 import ProjectsListPublic from "./ProjectsListPublic.astro";
 
-interface Props extends PublicMainPageViewModel {}
+type Props = PublicMainPageViewModel;
 
-const { pageData, projects, theme, userUrl } = Astro.props;
+const { pageData, projects, userUrl } = Astro.props;
 ---
 
 <!doctype html>

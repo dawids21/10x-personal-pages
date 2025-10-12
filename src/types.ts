@@ -215,8 +215,6 @@ export interface PublicMainPageViewModel {
   pageData: PageData;
   /** List of user's projects, ordered by display_order */
   projects: ProjectDto[];
-  /** Theme identifier for selecting layout component */
-  theme: Theme;
   /** User's URL slug for constructing project links */
   userUrl: string;
 }
@@ -230,8 +228,6 @@ export interface PublicProjectPageViewModel {
   /** Project content parsed from YAML */
   project_data: ProjectData;
   /** Theme identifier inherited from user's main page */
-  theme: Theme;
-  /** User's URL slug for constructing navigation links */
   user_url: string;
   /** Project's UUID from database */
   project_id: string;

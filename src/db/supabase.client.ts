@@ -7,14 +7,7 @@ const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-supabaseClient.auth
-  .signInWithPassword({
-    email: "test@test.com",
-    password: "test",
-  })
-  .then(({ data }) => {
-    if (data.session) {
-      console.log(data.session.access_token);
-    }
-  })
-  .catch(console.error);
+await supabaseClient.auth.signInWithPassword({
+  email: "test@test.com",
+  password: "test",
+});

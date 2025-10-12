@@ -7,6 +7,7 @@ const { user_url, project_id } = Astro.params;
 
 // Validate URL parameters
 if (!user_url || !project_id) {
+  // eslint-disable-next-line no-console
   console.error("Missing URL parameters:", { user_url, project_id });
   return Astro.redirect("/404");
 }
@@ -22,6 +23,7 @@ const { data: pageData, error: pageError } = await supabase
 
 // Handle page not found
 if (pageError || !pageData) {
+  // eslint-disable-next-line no-console
   console.error("Page not found:", user_url, pageError);
   return Astro.redirect("/404");
 }
@@ -35,12 +37,14 @@ const { data: projectData, error: projectError } = await supabase
 
 // Handle project not found
 if (projectError || !projectData) {
+  // eslint-disable-next-line no-console
   console.error("Project not found:", project_id, projectError);
   return Astro.redirect("/404");
 }
 
 // Validate ownership - project must belong to the page owner
 if (projectData.user_id !== pageData.user_id) {
+  // eslint-disable-next-line no-console
   console.error("Project ownership mismatch:", {
     project_user_id: projectData.user_id,
     page_user_id: pageData.user_id,
@@ -50,6 +54,7 @@ if (projectData.user_id !== pageData.user_id) {
 
 // Validate data field exists
 if (!projectData.data) {
+  // eslint-disable-next-line no-console
   console.error("No data field for project:", project_id);
   return Astro.redirect("/500");
 }
@@ -58,6 +63,7 @@ if (!projectData.data) {
 const parsedProjectData = projectData.data as unknown as ProjectData;
 
 if (!parsedProjectData.name || !parsedProjectData.description) {
+  // eslint-disable-next-line no-console
   console.error("Invalid project data structure for", project_id, {
     hasName: !!parsedProjectData.name,
     hasDescription: !!parsedProjectData.description,

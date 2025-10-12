@@ -4,7 +4,7 @@ import "@/styles/themes/public-themes.css";
 import ProjectHeader from "./ProjectHeader.astro";
 import ProjectDetails from "./ProjectDetails.astro";
 
-interface Props extends PublicProjectPageViewModel {}
+type Props = PublicProjectPageViewModel;
 
 const { project_data, user_url } = Astro.props;
 ---
