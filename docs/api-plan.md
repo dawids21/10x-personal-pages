@@ -43,6 +43,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **201 Created**: Page created successfully.
     - **400 Bad Request**: Validation failed (e.g., invalid URL format).
+    - **401 Unauthorized**: User is not authenticated.
     - **409 Conflict**: A page for this user already exists.
 
 #### Get User Page
@@ -62,6 +63,7 @@ users can only operate on their own data.
   ```
 - **Success/Error Codes**:
     - **200 OK**: Page retrieved successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page found for this user.
 
 #### Update Page Theme
@@ -86,6 +88,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: Theme updated successfully.
     - **400 Bad Request**: Invalid theme identifier.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page found for this user.
 
 #### Delete User Page
@@ -95,6 +98,7 @@ users can only operate on their own data.
 - **Description**: Deletes the user's personal page and all associated projects (via DB cascade).
 - **Success/Error Codes**:
     - **204 No Content**: Page and associated data deleted successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page found for this user.
 
 ### 2.2. Page URL
@@ -114,6 +118,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: URL updated successfully.
     - **400 Bad Request**: Invalid URL format or slug is a reserved word.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page found for this user.
     - **409 Conflict**: The requested URL is already taken.
 
@@ -134,6 +139,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: Page data updated successfully.
     - **400 Bad Request**: YAML validation failed. The response body will contain detailed error messages.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page found for this user.
 
 #### Download Current Page YAML
@@ -144,6 +150,7 @@ users can only operate on their own data.
 - **Response**: A YAML file with `Content-Disposition: attachment; filename="page.yaml"`.
 - **Success/Error Codes**:
     - **200 OK**: File sent successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: No page or data found for this user.
 
 ### 2.4. Projects
@@ -178,6 +185,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **201 Created**: Project created successfully.
     - **400 Bad Request**: Missing `project_name`.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: User does not have a main page to associate the project with.
 
 #### List User's Projects
@@ -204,6 +212,7 @@ users can only operate on their own data.
   ```
 - **Success/Error Codes**:
     - **200 OK**: Projects retrieved successfully.
+    - **401 Unauthorized**: User is not authenticated.
 
 #### Get a Single Project
 
@@ -223,6 +232,7 @@ users can only operate on their own data.
   ```
 - **Success/Error Codes**:
     - **200 OK**: Project retrieved successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Project not found.
 
 #### Update a Project's Name
@@ -242,6 +252,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: Project updated successfully.
     - **400 Bad Request**: Invalid `project_name`.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Project not found.
 
 #### Delete a Project
@@ -253,6 +264,7 @@ users can only operate on their own data.
     - `project_id` (string, required): The unique identifier of the project.
 - **Success/Error Codes**:
     - **204 No Content**: Project deleted successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Project not found.
 
 ### 2.5. Project Data (YAML)
@@ -274,6 +286,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: Project data updated successfully.
     - **400 Bad Request**: YAML validation failed.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Project not found.
 
 #### Download Current Project YAML
@@ -286,6 +299,7 @@ users can only operate on their own data.
 - **Response**: A YAML file with `Content-Disposition: attachment; filename="{project_id}.yaml"`.
 - **Success/Error Codes**:
     - **200 OK**: File sent successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Project or its data not found.
 
 ### 2.6. Project Reordering
@@ -308,6 +322,7 @@ users can only operate on their own data.
 - **Success/Error Codes**:
     - **200 OK**: Projects reordered successfully.
     - **400 Bad Request**: Invalid payload or one of the projects does not belong to the user.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: One of the specified `project_id`s was not found.
 
 ### 2.7. Templates
@@ -323,6 +338,7 @@ users can only operate on their own data.
 - **Response**: A blank YAML template file with comments and appropriate `Content-Disposition` header.
 - **Success/Error Codes**:
     - **200 OK**: Template downloaded successfully.
+    - **401 Unauthorized**: User is not authenticated.
     - **404 Not Found**: Invalid template `type`.
 
 ## 3. Authentication and Authorization

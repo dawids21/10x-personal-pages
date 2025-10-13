@@ -182,14 +182,21 @@ Authenticated users will have access to a dashboard with the following capabilit
 
 ### US-011 - View Generated Personal Page
 
-- Description: As a user, I want to easily view my public-facing personal page.
+- Description: As an anonymous user, I want to easily view any public-facing personal page.
 - Acceptance Criteria:
-  * Given I am logged in to my dashboard,
-  * When I click on my personal page link (e.g., `{APP_DOMAIN}/page/my-page`),
-  * Then my public personal page opens in a new tab.
-  * And it correctly displays the content from my latest uploaded YAML file.
+  * When I click on a personal page link (e.g., `{APP_DOMAIN}/page/user-page`),
+  * Then the public personal page opens.
+  * And it correctly displays the content from the latest uploaded YAML file.
 
-### US-012 - Download Current Configuration
+### US-012 - View Generated Project Page
+
+- Description: As an anonymous user, I want to easily view any public-facing project page.
+- Acceptance Criteria:
+    * When I click on 'View project' on a public personal page
+    * Then the public project page opens.
+    * And it correctly displays the content from the latest uploaded project YAML file.
+
+### US-013 - Download Current Configuration
 
 - Description: As a user, I want to download the YAML file that is currently powering my page so I can easily edit it.
 - Acceptance Criteria:
@@ -197,7 +204,7 @@ Authenticated users will have access to a dashboard with the following capabilit
   * When I click the "Download Current YAML" button on my dashboard,
   * Then a YAML file containing my current page's data is downloaded to my device.
 
-### US-013 - User Logout
+### US-014 - User Logout
 
 - Description: As a user, I want to log out of my account to end my session securely.
 - Acceptance Criteria:
