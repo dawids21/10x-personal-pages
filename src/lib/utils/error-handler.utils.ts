@@ -7,6 +7,12 @@ import {
 } from "../errors/pages.errors";
 import { ProjectNotFoundError } from "../errors/projects.errors";
 import { InvalidYamlError } from "../errors/shared.errors";
+import {
+  EmailAlreadyRegisteredError,
+  InvalidCredentialsError,
+  AuthenticationRequiredError,
+  AuthServiceError,
+} from "../errors/auth.errors";
 
 /**
  * Centralized error handler for API endpoints.
@@ -87,6 +93,54 @@ export function handleApiError(error: unknown): Response {
         },
       } as ErrorResponse),
       { status: 404, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof EmailAlreadyRegisteredError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "EMAIL_ALREADY_REGISTERED",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 409, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof InvalidCredentialsError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "INVALID_CREDENTIALS",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof AuthenticationRequiredError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "AUTHENTICATION_REQUIRED",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof AuthServiceError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "AUTH_SERVICE_ERROR",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 

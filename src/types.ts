@@ -236,6 +236,54 @@ export interface PublicProjectPageViewModel {
 }
 
 // ============================================================================
+// Authentication Command Models
+// ============================================================================
+
+/**
+ * Command for user sign-up
+ * Used in: POST /api/auth/sign-up request
+ */
+export interface SignUpCommand {
+  /** User's email address */
+  email: string;
+  /** User's password (min 8 characters) */
+  password: string;
+}
+
+/**
+ * Command for user sign-in
+ * Used in: POST /api/auth/sign-in request
+ */
+export interface SignInCommand {
+  /** User's email address */
+  email: string;
+  /** User's password */
+  password: string;
+}
+
+// ============================================================================
+// Authentication Response DTOs
+// ============================================================================
+
+/**
+ * Response after successful sign-up
+ * Used in: POST /api/auth/sign-up response
+ */
+export interface SignUpResponse {
+  /** Status indicating verification is required */
+  status: "verification_required";
+}
+
+/**
+ * Response after successful sign-in
+ * Used in: POST /api/auth/sign-in response
+ */
+export interface SignInResponse {
+  /** URL to redirect user to after sign-in */
+  next: string;
+}
+
+// ============================================================================
 // Error Response Types
 // ============================================================================
 
