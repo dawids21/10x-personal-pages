@@ -95,7 +95,9 @@ export function ProjectListItem({
     try {
       const response = await fetch(`/api/projects/${project.project_id}/data`);
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download project data" } }));
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: { message: "Failed to download project data" } }));
         const message = errorData.error?.message || "Failed to download project data";
 
         if (response.status === 401) {

@@ -4,14 +4,6 @@ import { InitialPageSetup } from "@/components/setup/InitialPageSetup";
 import type { PageDto } from "@/types";
 import "@/styles/global.css";
 
-// Check authentication
-const { data: userData, error: authError } = await Astro.locals.supabase.auth.getUser();
-
-// Check email verification
-if (!userData.user.email_confirmed_at) {
-  return Astro.redirect("/");
-}
-
 // Fetch page data
 let pageData: PageDto | null = null;
 let showInitialSetup = false;
