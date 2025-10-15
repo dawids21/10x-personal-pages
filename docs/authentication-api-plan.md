@@ -30,6 +30,7 @@ Conventions:
 - Implement as Astro endpoints under src/pages/api/auth/*.
 - Use context.locals.supabase (server client) for session-bound operations; do not use any service role admin client.
 - JSON responses use application/json; charset=utf-8.
+- Success responses for sign-up and sign-in return empty response bodies; clients should rely on the 200 status and established session cookie.
 - For all 4xx errors, use the ErrorResponse type defined in src/types.ts.
 
 2.1 POST /api/auth/sign-up
@@ -48,10 +49,7 @@ Request
   }
 
 Response
-- 200 OK
-  {
-    "status": "verification_required"
-  }
+- 200 OK (empty body)
 - 400 Bad Request (invalid email/password format)
   {
     "error": { "code": "invalid_request", "message": "Email or password invalid" }
@@ -84,10 +82,7 @@ Request
   }
 
 Response
-- 200 OK
-  {
-    "next": "/app"
-  }
+- 200 OK (empty body)
 - 401 Unauthorized (invalid credentials)
   {
     "error": { "code": "unauthorized", "message": "Invalid credentials" }
@@ -192,11 +187,8 @@ Examples
 
 Success payloads
 
-- POST /api/auth/sign-up (200)
-  { "status": "verification_required" }
-
-- POST /api/auth/sign-in (200)
-  { "next": "/app" }
+- POST /api/auth/sign-up (200): empty body
+- POST /api/auth/sign-in (200): empty body
 
 4. Integration Points
 
