@@ -15,6 +15,24 @@ import { projectDataSchema } from "../validators/projects.validators";
 import { z } from "zod";
 
 /**
+ * Generates a URL-safe slug from a project name.
+ * Converts to lowercase, replaces special characters with hyphens,
+ * removes consecutive hyphens, and trims hyphens from ends.
+ *
+ * @param projectName - The project name to convert to a slug
+ * @returns URL-safe slug string
+ */
+export function generateProjectSlug(projectName: string): string {
+  return projectName
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove special chars
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with single
+    .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
+}
+
+/**
  * Creates a new project for a user.
  * Automatically generates a unique project_id slug from the project_name.
  *
@@ -30,20 +48,6 @@ export async function createProject(
   userId: string,
   command: CreateProjectCommand
 ): Promise<ProjectCreateResponseDto> {
-  /**
-   * Generates a URL-safe slug from a project name.
-   * Converts to lowercase, replaces special characters with hyphens,
-   * removes consecutive hyphens, and trims hyphens from ends.
-   */
-  function generateProjectSlug(projectName: string): string {
-    return projectName
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "") // Remove special chars
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/-+/g, "-") // Replace multiple hyphens with single
-      .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
-  }
 
   /**
    * Finds a unique slug for a project by appending numeric suffixes if needed.
