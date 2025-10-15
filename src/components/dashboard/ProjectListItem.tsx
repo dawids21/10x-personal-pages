@@ -60,12 +60,72 @@ export function ProjectListItem({
     showSuccess("Project renamed successfully");
   };
 
-  const handleDownloadTemplate = () => {
-    window.location.href = "/api/templates/project";
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch("/api/templates/project");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download template" } }));
+        const message = errorData.error?.message || "Failed to download template";
+
+        if (response.status === 401) {
+          // Authentication error - user should re-login
+          window.location.href = "/";
+          return;
+        }
+
+        showError(message);
+        return;
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "project-template.yaml";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading template:", error);
+      showError("Failed to download template. Please try again.");
+    }
   };
 
-  const handleDownloadYaml = () => {
-    window.location.href = `/api/projects/${project.project_id}/data`;
+  const handleDownloadYaml = async () => {
+    try {
+      const response = await fetch(`/api/projects/${project.project_id}/data`);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download project data" } }));
+        const message = errorData.error?.message || "Failed to download project data";
+
+        if (response.status === 401) {
+          // Authentication error - user should re-login
+          window.location.href = "/";
+          return;
+        }
+
+        if (response.status === 404) {
+          // Project not found or no data
+          showError("No project data available to download. Please upload content first.");
+          return;
+        }
+
+        showError(message);
+        return;
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${project.project_name}-data.yaml`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading project YAML:", error);
+      showError("Failed to download project data. Please try again.");
+    }
   };
 
   const handleDeleteConfirm = async () => {

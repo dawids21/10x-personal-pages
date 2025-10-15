@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { AuthenticationSection } from "../components/auth/AuthenticationSection";
+---
+
+<Layout title="Personal Pages - Sign In">
+  <main class="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
+    <div class="w-full max-w-md space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">Personal Pages</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Create your personalized online presence</p>
+      </div>
+
+      <AuthenticationSection client:load />
+    </div>
+  </main>
+</Layout>

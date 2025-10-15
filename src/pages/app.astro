@@ -7,7 +7,8 @@ import "@/styles/global.css";
 // Check authentication
 const { data: userData, error: authError } = await Astro.locals.supabase.auth.getUser();
 
-if (authError || !userData?.user) {
+// Check email verification
+if (!userData.user.email_confirmed_at) {
   return Astro.redirect("/");
 }
 

@@ -21,12 +21,70 @@ export function PageContentCard() {
     clearErrors,
   } = useFileUpload(uploadApiCall, "Page data updated successfully", "Failed to upload page data. Please try again.");
 
-  const handleDownloadTemplate = () => {
-    window.location.href = "/api/templates/page";
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch("/api/templates/page");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download template" } }));
+        const message = errorData.error?.message || "Failed to download template";
+
+        if (response.status === 401) {
+          // Authentication error - user should re-login
+          window.location.href = "/";
+          return;
+        }
+
+        throw new Error(message);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "page-template.yaml";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading template:", error);
+      alert(error instanceof Error ? error.message : "Failed to download template. Please try again.");
+    }
   };
 
-  const handleDownloadCurrentYaml = () => {
-    window.location.href = "/api/pages/data";
+  const handleDownloadCurrentYaml = async () => {
+    try {
+      const response = await fetch("/api/pages/data");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download page data" } }));
+        const message = errorData.error?.message || "Failed to download page data";
+
+        if (response.status === 401) {
+          // Authentication error - user should re-login
+          window.location.href = "/";
+          return;
+        }
+
+        if (response.status === 404) {
+          // Page not found or no data
+          alert("No page data available to download. Please upload content first.");
+          return;
+        }
+
+        throw new Error(message);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "page-data.yaml";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading current YAML:", error);
+      alert(error instanceof Error ? error.message : "Failed to download page data. Please try again.");
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -71,8 +71,36 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
     setSubmissionState((prev) => ({ ...prev, serverErrors: null }));
   };
 
-  const handleDownloadTemplate = () => {
-    window.location.href = "/api/templates/page";
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch("/api/templates/page");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download template" } }));
+        const message = errorData.error?.message || "Failed to download template";
+
+        if (response.status === 401) {
+          // Authentication error - user should re-login
+          window.location.href = "/";
+          return;
+        }
+
+        showError(message);
+        return;
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "page-template.yaml";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      //eslint-disable-next-line no-console
+      console.error("Error downloading template:", error);
+      showError("Failed to download template. Please try again.");
+    }
   };
 
   const clearErrors = () => {

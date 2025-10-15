@@ -8,8 +8,10 @@ const PUBLIC_PATHS = [
   "/api/auth/sign-in",
   "/api/auth/resend-verification",
   "/api/auth/sign-out",
-  // Add other public paths as needed (e.g., landing page, public pages)
+  // Auth pages
   "/",
+  "/auth/callback",
+  // Public pages
   "/page/*",
 ];
 
@@ -40,14 +42,14 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
+  if (user && user.email_confirmed_at) {
     locals.user = {
       email: user.email,
       id: user.id,
     };
   } else {
-    // Redirect to log in for protected routes
-    return redirect("/auth/login");
+    // Redirect to landing page for protected routes
+    return redirect("/");
   }
 
   return next();

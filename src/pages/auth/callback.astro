@@ -1,0 +1,71 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+// Get the code from query parameters
+const code = Astro.url.searchParams.get("code");
+
+let error: string | null = null;
+
+if (!code) {
+  error = "This verification link is invalid or expired. Please return to the landing page and sign up again.";
+} else {
+  try {
+    // Exchange the code for a session using Supabase Auth
+    const supabase = Astro.locals.supabase;
+
+    const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (exchangeError) {
+      error = "This verification link is invalid or expired. Please return to the landing page and sign up again.";
+    } else if (data.session) {
+      // Success - redirect to dashboard
+      return Astro.redirect("/app", 302);
+    } else {
+      error = "Verification failed. Please try again or sign up with a new account.";
+    }
+  } catch {
+    error = "Verification failed. Please try again or sign up with a new account.";
+  }
+}
+---
+
+<Layout title="Email Verification">
+  <main class="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
+    <div class="w-full max-w-md space-y-8">
+      {
+        error && (
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-6">
+            <div class="flex justify-center">
+              <div class="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+                <svg
+                  class="h-8 w-8 text-red-600 dark:text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="text-center space-y-2">
+              <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Verification Failed</h2>
+              <p class="text-gray-600 dark:text-gray-400">{error}</p>
+            </div>
+
+            <div class="flex justify-center">
+              <a
+                href="/"
+                class="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-colors"
+              >
+                Back to Landing Page
+              </a>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </main>
+</Layout>
