@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { signUpSchema } from "@/lib/validators/auth.validators";
 import * as authService from "@/lib/services/auth.service";
-import type { SignUpCommand, SignUpResponse, ErrorResponse } from "@/types";
+import type { SignUpCommand, ErrorResponse } from "@/types";
 import { handleApiError } from "@/lib/utils/error-handler.utils";
 
 /**
@@ -43,12 +43,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // 3. Call service to sign up user (throws custom errors)
     await authService.signUp(locals.supabase, command.email, command.password, emailRedirectTo);
 
-    // 4. Return success response
-    const response: SignUpResponse = {
-      status: "verification_required",
-    };
-
-    return new Response(JSON.stringify(response), {
+    return new Response(null, {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

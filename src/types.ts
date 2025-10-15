@@ -262,28 +262,6 @@ export interface SignInCommand {
 }
 
 // ============================================================================
-// Authentication Response DTOs
-// ============================================================================
-
-/**
- * Response after successful sign-up
- * Used in: POST /api/auth/sign-up response
- */
-export interface SignUpResponse {
-  /** Status indicating verification is required */
-  status: "verification_required";
-}
-
-/**
- * Response after successful sign-in
- * Used in: POST /api/auth/sign-in response
- */
-export interface SignInResponse {
-  /** URL to redirect user to after sign-in */
-  next: string;
-}
-
-// ============================================================================
 // Error Response Types
 // ============================================================================
 
