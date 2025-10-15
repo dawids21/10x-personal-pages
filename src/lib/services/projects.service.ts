@@ -48,7 +48,6 @@ export async function createProject(
   userId: string,
   command: CreateProjectCommand
 ): Promise<ProjectCreateResponseDto> {
-
   /**
    * Finds a unique slug for a project by appending numeric suffixes if needed.
    * Checks if the base slug exists, and if so, tries slug-2, slug-3, etc.

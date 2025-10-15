@@ -4,6 +4,7 @@ import { FileUploadButton } from "@/components/shared/FileUploadButton";
 import { ErrorList } from "@/components/shared/ErrorList";
 import { useFileUpload } from "@/components/dashboard/hooks/useFileUpload";
 import type { UpdatePageDataCommand } from "@/types";
+import { useToast } from "@/components/dashboard/hooks/useToast.ts";
 
 export function PageContentCard() {
   const uploadApiCall = async (fileContent: string) => {
@@ -20,6 +21,7 @@ export function PageContentCard() {
     errors: uploadErrors,
     clearErrors,
   } = useFileUpload(uploadApiCall, "Page data updated successfully", "Failed to upload page data. Please try again.");
+  const { showError } = useToast();
 
   const handleDownloadTemplate = async () => {
     try {
@@ -34,7 +36,9 @@ export function PageContentCard() {
           return;
         }
 
-        throw new Error(message);
+        // eslint-disable-next-line no-console
+        console.error("Error downloading template:", message);
+        showError(message);
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -46,8 +50,9 @@ export function PageContentCard() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error("Error downloading template:", error);
-      alert(error instanceof Error ? error.message : "Failed to download template. Please try again.");
+      showError(error instanceof Error ? error.message : "Failed to download template. Please try again.");
     }
   };
 
@@ -66,11 +71,13 @@ export function PageContentCard() {
 
         if (response.status === 404) {
           // Page not found or no data
-          alert("No page data available to download. Please upload content first.");
+          showError("No page data available to download. Please upload content first.");
           return;
         }
 
-        throw new Error(message);
+        // eslint-disable-next-line no-console
+        console.error("Error downloading current YAML:", message);
+        showError(message);
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -82,6 +89,7 @@ export function PageContentCard() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error downloading current YAML:", error);
       alert(error instanceof Error ? error.message : "Failed to download page data. Please try again.");
     }

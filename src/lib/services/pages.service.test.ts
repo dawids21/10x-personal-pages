@@ -550,10 +550,7 @@ bio: ${"b".repeat(501)}
         const pageData: PageData = {
           name: "John Doe",
           bio: "Developer",
-          experience: [
-            { job_title: "Senior Dev", job_description: "Led projects" },
-            { job_title: "Junior Dev" },
-          ],
+          experience: [{ job_title: "Senior Dev", job_description: "Led projects" }, { job_title: "Junior Dev" }],
         };
 
         const yaml = convertToYaml(pageData);
