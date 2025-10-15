@@ -11,6 +11,10 @@ Backend - Supabase as a comprehensive backend solution:
 - Is an open source solution that can be hosted locally or on your own server
 - Has built-in user authentication
 
+Testing:
+- Vitest for unit and integration testing
+- Playwright for end-to-end testing
+
 CI/CD and Hosting:
 - Github Actions for creating CI/CD pipelines
 - CloudFlare for hosting the application

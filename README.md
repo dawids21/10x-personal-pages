@@ -22,6 +22,11 @@ coding, hosting setup, or domain registration needed.
     - Backend-as-a-Service SDK
     - Open source and self-hostable
 
+### Testing
+
+- **[Vitest](https://vitest.dev/)** - Unit and integration testing
+- **[Playwright](https://playwright.dev/)** - End-to-end browser testing
+
 ### CI/CD & Hosting
 
 - **GitHub Actions** - Automated CI/CD pipelines
