@@ -6,6 +6,13 @@ import type { Database } from "./database.types";
 const supabaseUrl = import.meta.env.SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 
+// Validate environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    `Missing Supabase environment variables. SUPABASE_URL: ${supabaseUrl ? "set" : "missing"}, SUPABASE_KEY: ${supabaseAnonKey ? "set" : "missing"}`
+  );
+}
+
 // Client-side Supabase client (existing)
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
