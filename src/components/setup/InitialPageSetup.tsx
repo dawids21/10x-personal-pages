@@ -10,6 +10,7 @@ import { AppHeader } from "@/components/dashboard/AppHeader";
 import { useToast } from "@/components/dashboard/hooks/useToast";
 import { isErrorResponse, getValidationErrors } from "@/components/dashboard/dashboard.types";
 import type { CreatePageCommand, ErrorResponse, ValidationErrorDetail, Theme } from "@/types";
+import { Toaster } from "sonner";
 
 interface InitialPageSetupProps {
   baseUrl: string;
@@ -301,6 +302,7 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
           </CardFooter>
         </Card>
       </main>
+      <Toaster position="bottom-right" />
     </>
   );
 }
