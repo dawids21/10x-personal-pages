@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProjectListItem } from "@/components/dashboard/ProjectListItem";
 import { CreateProjectModal } from "@/components/dashboard/CreateProjectModal";
 import { useToast } from "@/components/dashboard/hooks/useToast";
-import type { ProjectDto, ProjectCreateResponseDto } from "@/types";
+import type { ProjectCreateResponseDto, ProjectDto } from "@/types";
 
 export function ProjectsCard() {
   const [serverProjects, setServerProjects] = useState<ProjectDto[]>([]);
@@ -208,7 +208,12 @@ export function ProjectsCard() {
 
               {hasChanges && (
                 <div className="flex gap-2 border-t pt-4">
-                  <Button onClick={handleSaveOrder} disabled={isSavingOrder} className="flex-1">
+                  <Button
+                    onClick={handleSaveOrder}
+                    disabled={isSavingOrder}
+                    className="flex-1"
+                    data-testid="save-project-order-button"
+                  >
                     {isSavingOrder ? (
                       <>
                         <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

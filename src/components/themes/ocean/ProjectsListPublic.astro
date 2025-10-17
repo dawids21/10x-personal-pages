@@ -23,6 +23,7 @@ const { projects, userUrl } = Astro.props;
             <div
               class="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent/50 transition-colors"
               key={project.project_id}
+              data-project-name={project.project_name}
             >
               <h4 class="text-lg font-semibold text-foreground">{project.project_name}</h4>
               <a

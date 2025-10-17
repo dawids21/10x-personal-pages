@@ -11,6 +11,7 @@ export function ReorderControls({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, 
         onClick={onMoveUp}
         disabled={!canMoveUp}
         aria-label={`Move ${itemLabel} up`}
+        data-testid="move-project-up-button"
         className="h-6 w-6 p-0"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,6 +25,7 @@ export function ReorderControls({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, 
         onClick={onMoveDown}
         disabled={!canMoveDown}
         aria-label={`Move ${itemLabel} down`}
+        data-testid="move-project-down-button"
         className="h-6 w-6 p-0"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

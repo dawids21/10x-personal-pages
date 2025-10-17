@@ -129,4 +129,61 @@ test.describe("Page Management", () => {
       end_date: new Date("2025-06-30"),
     });
   });
+
+  test("Complete project reordering flow", async ({ page }) => {
+    // Initialize page objects
+    const setupPage = new InitialPageSetupPage(page);
+    const dashboard = new DashboardPage(page);
+    const publicPage = new PublicPage(page);
+    const createProjectModal = new CreateProjectModalPage(page);
+
+    // Phase 1: Initial Setup
+    await authenticateUser(page);
+    await setupPage.goto();
+    await setupPage.createPage("test-user-page", "Ocean", "valid-page.yaml");
+    await setupPage.waitForRedirectToDashboard();
+
+    // Phase 2: Create Three Projects
+    // Create Project Alpha
+    await dashboard.clickNewProject();
+    await createProjectModal.fillProjectName("Project Alpha");
+    await createProjectModal.clickCreate();
+    await createProjectModal.waitForClose();
+    await dashboard.expectSuccessToast("Project created successfully");
+    await dashboard.expectProjectInList("Project Alpha");
+
+    // Create Project Beta
+    await dashboard.clickNewProject();
+    await createProjectModal.fillProjectName("Project Beta");
+    await createProjectModal.clickCreate();
+    await createProjectModal.waitForClose();
+    await dashboard.expectSuccessToast("Project created successfully");
+    await dashboard.expectProjectInList("Project Beta");
+
+    // Create Project Gamma
+    await dashboard.clickNewProject();
+    await createProjectModal.fillProjectName("Project Gamma");
+    await createProjectModal.clickCreate();
+    await createProjectModal.waitForClose();
+    await dashboard.expectSuccessToast("Project created successfully");
+    await dashboard.expectProjectInList("Project Gamma");
+
+    // Phase 3: Verify Initial Order on Public Page
+    await publicPage.goto("test-user-page");
+    await publicPage.expectProjectOrder(["Project Alpha", "Project Beta", "Project Gamma"]);
+
+    // Phase 4: Reorder Projects on Dashboard
+    await dashboard.goto();
+    // Move "Project Gamma" to the top (click up twice)
+    await dashboard.clickProjectMoveUp("Project Gamma");
+    await dashboard.clickProjectMoveDown("Project Alpha");
+    // Verify order changed on dashboard
+    await dashboard.expectProjectOrder(["Project Gamma", "Project Alpha", "Project Beta"]);
+    // Save the new order
+    await dashboard.clickSaveProjectOrder();
+
+    // Phase 5: Verify New Order on Public Page
+    await publicPage.goto("test-user-page");
+    await publicPage.expectProjectOrder(["Project Gamma", "Project Alpha", "Project Beta"]);
+  });
 });

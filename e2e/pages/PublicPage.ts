@@ -91,8 +91,27 @@ export class PublicPage {
   }
 
   async clickProject(projectName: string): Promise<void> {
-    // Find the link with aria-label containing the project name and click it
-    const viewLink = this.page.locator(`a[aria-label*="${projectName}"]`);
+    const projectCard = this.page.locator(`[data-project-name="${projectName}"]`);
+    const viewLink = projectCard.locator('a[aria-label*="View"]');
     await viewLink.click();
+  }
+
+  async getProjectOrder(): Promise<string[]> {
+    const projectElements = await this.page.locator("[data-project-name]").all();
+    const projectNames: string[] = [];
+
+    for (const element of projectElements) {
+      const name = await element.getAttribute("data-project-name");
+      if (name) {
+        projectNames.push(name);
+      }
+    }
+
+    return projectNames;
+  }
+
+  async expectProjectOrder(expectedOrder: string[]): Promise<void> {
+    const actualOrder = await this.getProjectOrder();
+    expect(actualOrder).toEqual(expectedOrder);
   }
 }

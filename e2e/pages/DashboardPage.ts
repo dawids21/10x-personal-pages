@@ -81,7 +81,7 @@ export class DashboardPage {
   }
 
   async expectSuccessToast(message: string): Promise<void> {
-    const toast = this.page.locator("[data-sonner-toast]");
+    const toast = this.page.locator("[data-sonner-toast]").last();
     await expect(toast).toBeVisible({ timeout: 5000 });
     await expect(toast).toContainText(message);
   }
@@ -128,5 +128,46 @@ export class DashboardPage {
     const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
     const validationErrors = projectCard.getByTestId("project-validation-errors");
     await expect(validationErrors).toBeVisible();
+  }
+
+  async getProjectOrder(): Promise<string[]> {
+    const projectCards = await this.page.getByTestId(/project-list-item-/).all();
+    const projectNames: string[] = [];
+
+    for (const card of projectCards) {
+      const testId = await card.getAttribute("data-testid");
+      if (testId) {
+        const name = testId.replace("project-list-item-", "");
+        projectNames.push(name);
+      }
+    }
+
+    return projectNames;
+  }
+
+  async clickProjectMoveUp(projectName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+    const moveUpButton = projectCard.getByTestId("move-project-up-button");
+    await moveUpButton.click();
+  }
+
+  async clickProjectMoveDown(projectName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+    const moveDownButton = projectCard.getByTestId("move-project-down-button");
+    await moveDownButton.click();
+  }
+
+  async clickSaveProjectOrder(): Promise<void> {
+    const saveButton = this.page.getByTestId("save-project-order-button");
+    await saveButton.click();
+
+    await expect(saveButton).toContainText("Saving");
+    await expect(saveButton).toBeDisabled();
+    await expect(saveButton).not.toBeVisible();
+  }
+
+  async expectProjectOrder(expectedOrder: string[]): Promise<void> {
+    const actualOrder = await this.getProjectOrder();
+    expect(actualOrder).toEqual(expectedOrder);
   }
 }
