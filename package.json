@@ -19,7 +19,7 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@astrojs/node": "^9.4.3",
+    "@astrojs/cloudflare": "^12.6.10",
     "@astrojs/react": "^4.3.1",
     "@astrojs/sitemap": "^3.5.1",
     "@radix-ui/react-alert-dialog": "^1.1.15",
