@@ -16,5 +16,5 @@ Testing:
 - Playwright for end-to-end testing
 
 CI/CD and Hosting:
-- Github Actions for creating CI/CD pipelines
-- CloudFlare for hosting the application
+- GitHub Actions for CI (tests, lint) and optional deployment
+- Cloudflare Pages for hosting (SSR via Pages Functions/Workers) using the official @astrojs/cloudflare adapter

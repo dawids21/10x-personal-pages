@@ -29,8 +29,8 @@ coding, hosting setup, or domain registration needed.
 
 ### CI/CD & Hosting
 
-- **GitHub Actions** - Automated CI/CD pipelines
-- **Cloudflare** - Application hosting and deployment
+- **Cloudflare Pages** - Hosting with SSR via Pages Functions/Workers
+- **GitHub Actions** - Optional CI for tests/lint; Cloudflare Pages handles builds and preview deployments
 
 ## Getting Started
 
@@ -79,6 +79,20 @@ The application will be available at `http://localhost:3000`
 | `npm run lint`     | Check code for linting errors            |
 | `npm run lint:fix` | Automatically fix linting errors         |
 | `npm run format`   | Format code with Prettier                |
+
+## Deployment: Cloudflare Pages
+
+This project is hosted on Cloudflare Pages.
+
+- Connect your GitHub repository to Cloudflare Pages (Framework preset: Astro)
+- Configure environment variables in Pages project Settings ➜ Variables:
+  - SUPABASE_URL
+  - SUPABASE_KEY
+- Build command: `npm run build`
+- Output directory: `dist`
+- Preview deployments: enabled automatically for pull requests
+
+Optional: Keep GitHub Actions for tests and lint; Pages will build and deploy on push.
 
 ## Project Scope
 
