@@ -175,7 +175,9 @@ export function ProjectsCard() {
                   : `${localProjects.length} project${localProjects.length === 1 ? "" : "s"}`}
               </CardDescription>
             </div>
-            <Button onClick={() => setIsCreateModalOpen(true)}>New Project</Button>
+            <Button onClick={() => setIsCreateModalOpen(true)} data-testid="new-project-button">
+              New Project
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">

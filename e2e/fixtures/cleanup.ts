@@ -1,7 +1,6 @@
-import { test as setup } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
-setup("cleanup test data before tests", async () => {
+export async function cleanupDatabase() {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_KEY;
   const email = process.env.E2E_USERNAME;
@@ -23,4 +22,4 @@ setup("cleanup test data before tests", async () => {
 
   //eslint-disable-next-line no-console
   console.log("Test data cleaned up before tests");
-});
+}

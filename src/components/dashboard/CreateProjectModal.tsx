@@ -90,6 +90,7 @@ export function CreateProjectModal({ isOpen, maxDisplayOrder, onClose, onCreate 
           </label>
           <Input
             id="project-name"
+            data-testid="project-name-input"
             type="text"
             value={projectName}
             onChange={(e) => {
@@ -113,7 +114,7 @@ export function CreateProjectModal({ isOpen, maxDisplayOrder, onClose, onCreate 
           <Button variant="outline" onClick={onClose} disabled={isCreating}>
             Cancel
           </Button>
-          <Button onClick={handleCreate} disabled={isCreating}>
+          <Button onClick={handleCreate} disabled={isCreating} data-testid="create-project-button">
             {isCreating ? (
               <>
                 <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

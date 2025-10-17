@@ -1,0 +1,5 @@
+name: "Invalid Project Test"
+# Missing required field: description
+tech_stack: "React, TypeScript"
+start_date: 2024-06-30
+end_date: 2024-01-15

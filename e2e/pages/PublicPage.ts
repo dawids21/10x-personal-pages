@@ -85,4 +85,14 @@ export class PublicPage {
       }
     }
   }
+
+  async expectProjectInList(projectName: string): Promise<void> {
+    await expect(this.page.locator("body")).toContainText(projectName);
+  }
+
+  async clickProject(projectName: string): Promise<void> {
+    // Find the link with aria-label containing the project name and click it
+    const viewLink = this.page.locator(`a[aria-label*="${projectName}"]`);
+    await viewLink.click();
+  }
 }

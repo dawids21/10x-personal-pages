@@ -15,6 +15,7 @@ export class DashboardPage {
   readonly uploadPageYamlButton: Locator;
   readonly validationErrors: Locator;
   readonly publicPageLink: Locator;
+  readonly newProjectButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -28,6 +29,7 @@ export class DashboardPage {
     this.uploadPageYamlButton = page.getByTestId("upload-page-yaml-button").locator("button");
     this.validationErrors = page.getByTestId("validation-errors");
     this.publicPageLink = page.getByTestId("public-page-link");
+    this.newProjectButton = page.getByTestId("new-project-button");
   }
 
   async goto(): Promise<void> {
@@ -95,5 +97,36 @@ export class DashboardPage {
     } else {
       throw new Error("Public page URL not found");
     }
+  }
+
+  async clickNewProject(): Promise<void> {
+    await this.newProjectButton.click();
+  }
+
+  async expectProjectInList(projectName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+    await expect(projectCard).toBeVisible();
+  }
+
+  async uploadProjectYaml(projectName: string, fileName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+    const uploadButton = projectCard.getByTestId("upload-project-yaml-button").locator("button");
+    const uploadInput = projectCard.getByTestId("upload-project-yaml-button").locator("input[type='file']");
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const filePath = path.join(__dirname, "..", "fixtures", fileName);
+
+    await uploadButton.click();
+    await uploadInput.setInputFiles(filePath);
+
+    await expect(uploadButton).toContainText("Uploading");
+    await expect(uploadButton).toContainText("Upload YAML");
+  }
+
+  async expectProjectValidationErrors(projectName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+    const validationErrors = projectCard.getByTestId("project-validation-errors");
+    await expect(validationErrors).toBeVisible();
   }
 }

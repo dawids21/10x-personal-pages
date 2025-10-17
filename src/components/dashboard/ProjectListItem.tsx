@@ -86,6 +86,7 @@ export function ProjectListItem({
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error("Error downloading template:", error);
       showError("Failed to download template. Please try again.");
     }
@@ -125,6 +126,7 @@ export function ProjectListItem({
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error("Error downloading project YAML:", error);
       showError("Failed to download project data. Please try again.");
     }
@@ -157,7 +159,7 @@ export function ProjectListItem({
 
   return (
     <>
-      <Card>
+      <Card data-testid={`project-list-item-${project.project_name}`}>
         <CardContent className="pt-2">
           <div className="flex items-start gap-4">
             <div className="flex-1 space-y-3">
@@ -179,20 +181,26 @@ export function ProjectListItem({
                 <Button variant="outline" size="default" onClick={handleDownloadYaml}>
                   Download YAML
                 </Button>
-                <FileUploadButton
-                  onUpload={handleUploadYaml}
-                  accept=".yaml,.yml"
-                  disabled={isUploading}
-                  className="h-9"
-                >
-                  Upload YAML
-                </FileUploadButton>
+                <div data-testid="upload-project-yaml-button">
+                  <FileUploadButton
+                    onUpload={handleUploadYaml}
+                    accept=".yaml,.yml"
+                    disabled={isUploading}
+                    className="h-9"
+                  >
+                    Upload YAML
+                  </FileUploadButton>
+                </div>
                 <Button variant="destructive" size="default" onClick={() => setShowDeleteConfirm(true)}>
                   Delete
                 </Button>
               </div>
 
-              {uploadErrors && uploadErrors.length > 0 && <ErrorList errors={uploadErrors} onClear={clearErrors} />}
+              {uploadErrors && uploadErrors.length > 0 && (
+                <div data-testid="project-validation-errors">
+                  <ErrorList errors={uploadErrors} onClear={clearErrors} />
+                </div>
+              )}
             </div>
 
             <ReorderControls

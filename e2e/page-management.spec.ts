@@ -2,9 +2,16 @@ import { authenticateUser } from "./fixtures/auth";
 import { InitialPageSetupPage } from "./pages/InitialPageSetupPage.ts";
 import { DashboardPage } from "./pages/DashboardPage";
 import { PublicPage } from "./pages/PublicPage";
+import { CreateProjectModalPage } from "./pages/CreateProjectModalPage";
+import { PublicProjectPage } from "./pages/PublicProjectPage";
 import { expect, test } from "@playwright/test";
+import { cleanupDatabase } from "./fixtures/cleanup.ts";
 
 test.describe("Page Management", () => {
+  test.beforeEach(async () => {
+    await cleanupDatabase();
+  });
+
   test("Complete page management flow", async ({ page }) => {
     const setupPage = new InitialPageSetupPage(page);
     const dashboard = new DashboardPage(page);
@@ -67,5 +74,59 @@ test.describe("Page Management", () => {
     // Attempt to save an invalid YAML format
     await dashboard.uploadYamlFile("invalid-page.yaml");
     await dashboard.expectValidationErrors();
+  });
+
+  test("Complete project upload flow", async ({ page }) => {
+    // Initialize page objects
+    const setupPage = new InitialPageSetupPage(page);
+    const dashboard = new DashboardPage(page);
+    const publicPage = new PublicPage(page);
+    const createProjectModal = new CreateProjectModalPage(page);
+    const publicProjectPage = new PublicProjectPage(page);
+
+    // Phase 1: Initial Setup
+    await authenticateUser(page);
+    await setupPage.goto();
+    await setupPage.createPage("test-user-page", "Ocean", "valid-page.yaml");
+    await setupPage.waitForRedirectToDashboard();
+
+    // Phase 2: Create Project
+    await dashboard.clickNewProject();
+    await createProjectModal.fillProjectName("My Test Project");
+    await createProjectModal.clickCreate();
+    await createProjectModal.waitForClose();
+    await dashboard.expectSuccessToast("Project created successfully");
+    await dashboard.expectProjectInList("My Test Project");
+
+    // Verify project is visible on public page
+    await publicPage.goto("test-user-page");
+    await publicPage.expectProjectInList("My Test Project");
+
+    // Phase 3: Upload Invalid Project YAML
+    await dashboard.goto();
+    await dashboard.uploadProjectYaml("My Test Project", "invalid-project.yaml");
+    await dashboard.expectProjectValidationErrors("My Test Project");
+
+    // Phase 4: Upload Valid Project YAML
+    await dashboard.uploadProjectYaml("My Test Project", "valid-project.yaml");
+    await dashboard.expectSuccessToast("Project data updated successfully");
+
+    // Navigate to public page and click project to view details
+    await publicPage.goto("test-user-page");
+    await publicPage.clickProject("My Test Project");
+
+    // Wait for navigation to project detail page
+    await page.waitForURL(/\/page\/test-user-page\/projects\/.+/);
+
+    // Verify all project data on the project detail page
+    await publicProjectPage.expectProjectData({
+      name: "Full Stack E-Commerce Platform",
+      description:
+        "A comprehensive e-commerce platform with real-time inventory management, secure payment processing, and advanced analytics. Built with modern technologies to ensure scalability and performance.",
+      tech_stack: "React, Node.js, PostgreSQL, Redis, Docker, AWS",
+      prod_link: "https://example-ecommerce.com",
+      start_date: new Date("2024-01-15"),
+      end_date: new Date("2025-06-30"),
+    });
   });
 });

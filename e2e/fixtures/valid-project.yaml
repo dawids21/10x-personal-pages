@@ -1,0 +1,6 @@
+name: "Full Stack E-Commerce Platform"
+description: "A comprehensive e-commerce platform with real-time inventory management, secure payment processing, and advanced analytics. Built with modern technologies to ensure scalability and performance."
+tech_stack: "React, Node.js, PostgreSQL, Redis, Docker, AWS"
+prod_link: "https://example-ecommerce.com"
+start_date: 2024-01-15
+end_date: 2025-06-30
