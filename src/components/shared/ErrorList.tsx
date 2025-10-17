@@ -6,7 +6,12 @@ export function ErrorList({ errors, onClear }: ErrorListProps) {
   }
 
   return (
-    <div role="alert" aria-live="polite" className="rounded-md border border-destructive/50 bg-destructive/10 p-4">
+    <div
+      role="alert"
+      aria-live="polite"
+      className="rounded-md border border-destructive/50 bg-destructive/10 p-4"
+      data-testid="validation-errors"
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1">
           <h3 className="mb-2 text-sm font-medium text-destructive">Please fix the following errors:</h3>

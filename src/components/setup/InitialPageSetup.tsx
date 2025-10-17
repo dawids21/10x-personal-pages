@@ -217,9 +217,10 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
                 disabled={submissionState.isSubmitting}
                 aria-invalid={!!submissionState.urlError}
                 aria-describedby={submissionState.urlError ? "url-error" : "url-preview"}
+                data-testid="url-input"
               />
               {submissionState.urlError && (
-                <p id="url-error" className="text-sm text-destructive" role="alert">
+                <p id="url-error" className="text-sm text-destructive" role="alert" data-testid="url-error">
                   {submissionState.urlError}
                 </p>
               )}
@@ -232,7 +233,7 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
             <div className="space-y-2">
               <Label htmlFor="page-theme">Theme</Label>
               <Select value={formState.theme} onValueChange={handleThemeChange} disabled={submissionState.isSubmitting}>
-                <SelectTrigger id="page-theme" aria-describedby="theme-description">
+                <SelectTrigger id="page-theme" aria-describedby="theme-description" data-testid="theme-select">
                   <SelectValue placeholder="Select a theme" />
                 </SelectTrigger>
                 <SelectContent>
@@ -263,13 +264,15 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
                 >
                   Download Template
                 </Button>
-                <FileUploadButton
-                  onUpload={handleYamlUpload}
-                  accept=".yaml,.yml"
-                  disabled={submissionState.isSubmitting}
-                >
-                  Upload YAML
-                </FileUploadButton>
+                <div data-testid="upload-page-yaml-button">
+                  <FileUploadButton
+                    onUpload={handleYamlUpload}
+                    accept=".yaml,.yml"
+                    disabled={submissionState.isSubmitting}
+                  >
+                    Upload YAML
+                  </FileUploadButton>
+                </div>
               </div>
               {formState.yamlContent && (
                 <p className="text-sm text-muted-foreground" role="status">
@@ -289,6 +292,7 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
               onClick={handleCreatePage}
               disabled={submissionState.isSubmitting || !formState.url.trim()}
               className="w-full"
+              data-testid="create-page-button"
             >
               {submissionState.isSubmitting ? (
                 <>

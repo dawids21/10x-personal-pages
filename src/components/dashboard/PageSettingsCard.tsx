@@ -121,8 +121,13 @@ export function PageSettingsCard({ page: initialPage, baseUrl }: PageSettingsCar
               }}
               placeholder="your-page-url"
               className={urlError ? "border-destructive" : ""}
+              data-testid="url-input"
             />
-            <Button onClick={handleUrlUpdate} disabled={isUpdatingUrl || url === page.url}>
+            <Button
+              onClick={handleUrlUpdate}
+              disabled={isUpdatingUrl || url === page.url}
+              data-testid="update-url-button"
+            >
               {isUpdatingUrl ? (
                 <>
                   <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -134,11 +139,17 @@ export function PageSettingsCard({ page: initialPage, baseUrl }: PageSettingsCar
             </Button>
           </div>
           {urlError && (
-            <p className="text-sm text-destructive" role="alert">
+            <p className="text-sm text-destructive" role="alert" data-testid="url-error">
               {urlError}
             </p>
           )}
-          <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+          <a
+            href={fullUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline"
+            data-testid="public-page-link"
+          >
             {fullUrl}
           </a>
         </div>
@@ -150,7 +161,7 @@ export function PageSettingsCard({ page: initialPage, baseUrl }: PageSettingsCar
           </label>
           <div className="flex gap-2">
             <Select value={theme} onValueChange={setTheme}>
-              <SelectTrigger id="page-theme" className="flex-1">
+              <SelectTrigger id="page-theme" className="flex-1" data-testid="theme-select">
                 <SelectValue placeholder="Select a theme" />
               </SelectTrigger>
               <SelectContent>
@@ -161,7 +172,11 @@ export function PageSettingsCard({ page: initialPage, baseUrl }: PageSettingsCar
                 ))}
               </SelectContent>
             </Select>
-            <Button onClick={handleThemeUpdate} disabled={isUpdatingTheme || theme === page.theme}>
+            <Button
+              onClick={handleThemeUpdate}
+              disabled={isUpdatingTheme || theme === page.theme}
+              data-testid="save-theme-button"
+            >
               {isUpdatingTheme ? (
                 <>
                   <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -173,7 +188,7 @@ export function PageSettingsCard({ page: initialPage, baseUrl }: PageSettingsCar
             </Button>
           </div>
           {themeError && (
-            <p className="text-sm text-destructive" role="alert">
+            <p className="text-sm text-destructive" role="alert" data-testid="theme-error">
               {themeError}
             </p>
           )}

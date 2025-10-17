@@ -1,0 +1,25 @@
+name: "John Doe"
+bio: "Software Engineer with 10 years of experience in web development and cloud architecture."
+contact_info:
+  - label: "Email"
+    value: "john.doe@example.com"
+  - label: "Phone"
+    value: "+1 234 567 8900"
+  - label: "LinkedIn"
+    value: "https://linkedin.com/in/johndoe"
+experience:
+  - job_title: "Senior Software Engineer at Tech Corp"
+    job_description: "Led development of microservices architecture and mentored junior developers."
+  - job_title: "Software Developer at StartupXYZ"
+    job_description: "Built full-stack applications using React and Node.js."
+education:
+  - school_title: "Master of Science in Computer Science"
+    school_description: "University of Technology, 2015"
+  - school_title: "Bachelor of Science in Software Engineering"
+    school_description: "Tech University, 2013"
+skills:
+  - name: "JavaScript"
+  - name: "TypeScript"
+  - name: "React"
+  - name: "Node.js"
+  - name: "AWS"

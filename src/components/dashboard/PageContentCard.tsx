@@ -111,9 +111,11 @@ export function PageContentCard() {
           <Button variant="outline" onClick={handleDownloadCurrentYaml}>
             Download Current YAML
           </Button>
-          <FileUploadButton onUpload={handleUploadYaml} accept=".yaml,.yml" disabled={isUploading}>
-            Upload YAML
-          </FileUploadButton>
+          <div data-testid="upload-page-yaml-button">
+            <FileUploadButton onUpload={handleUploadYaml} accept=".yaml,.yml" disabled={isUploading}>
+              Upload YAML
+            </FileUploadButton>
+          </div>
         </div>
 
         {uploadErrors && uploadErrors.length > 0 && <ErrorList errors={uploadErrors} onClear={clearErrors} />}

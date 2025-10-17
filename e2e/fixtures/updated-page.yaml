@@ -1,0 +1,23 @@
+name: "John Doe - Updated"
+bio: "Updated bio: Senior Software Architect specializing in distributed systems and cloud-native applications."
+contact_info:
+  - label: "Email"
+    value: "john.updated@example.com"
+  - label: "Twitter"
+    value: "@johndoe_tech"
+experience:
+  - job_title: "Lead Software Architect at MegaCorp"
+    job_description: "Designed and implemented enterprise-scale microservices architecture serving millions of users."
+  - job_title: "Senior Software Engineer at Tech Corp"
+    job_description: "Led development of microservices architecture and mentored junior developers."
+education:
+  - school_title: "PhD in Computer Science"
+    school_description: "Tech University, 2020"
+  - school_title: "Master of Science in Computer Science"
+    school_description: "University of Technology, 2015"
+skills:
+  - name: "Kubernetes"
+  - name: "Docker"
+  - name: "TypeScript"
+  - name: "Go"
+  - name: "System Design"

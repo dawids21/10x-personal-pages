@@ -113,7 +113,7 @@ When modifying the directory structure, always update this section.
 - Follow Supabase guidelines for security and performance.
 - Use Zod schemas to validate data exchanged with the backend.
 - Use supabase from context.locals in Astro routes instead of importing supabaseClient directly
-- Don't add comments
+- Don't add comments to the database schema in migrations
 
 ## TESTING
 
@@ -148,4 +148,5 @@ When modifying the directory structure, always update this section.
 - Leverage trace viewer for debugging test failures
 - Implement test hooks for setup and teardown
 - Use expect assertions with specific matchers
-- Leverage parallel execution for faster test runsto the database schema in migrations
+- Leverage parallel execution for faster test runs
+- Use `pressSequentially()` instead of `fill()` for React inputs to ensure onChange events fire properly - `fill()` sets DOM values directly but may not trigger React's synthetic events, causing state desync issues
