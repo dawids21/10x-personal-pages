@@ -6,7 +6,6 @@ export class InitialPageSetupPage {
   readonly page: Page;
   readonly urlInput: Locator;
   readonly themeSelect: Locator;
-  readonly uploadPageYamlInput: Locator;
   readonly uploadPageYamlButton: Locator;
   readonly createPageButton: Locator;
   readonly urlError: Locator;
@@ -16,7 +15,6 @@ export class InitialPageSetupPage {
     this.page = page;
     this.urlInput = page.getByTestId("url-input");
     this.themeSelect = page.getByTestId("theme-select");
-    this.uploadPageYamlInput = page.getByTestId("upload-page-yaml-button").locator("input[type='file']");
     this.uploadPageYamlButton = page.getByTestId("upload-page-yaml-button").locator("button");
     this.createPageButton = page.getByTestId("create-page-button");
     this.urlError = page.getByTestId("url-error");
@@ -41,8 +39,11 @@ export class InitialPageSetupPage {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const filePath = path.join(__dirname, "..", "fixtures", fileName);
+
+    const fileChooserPromise = this.page.waitForEvent("filechooser");
     await this.uploadPageYamlButton.click();
-    await this.uploadPageYamlInput.setInputFiles(filePath);
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles(filePath);
   }
 
   async clickCreatePage(): Promise<void> {

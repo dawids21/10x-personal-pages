@@ -11,7 +11,6 @@ export class DashboardPage {
   readonly themeSelect: Locator;
   readonly saveThemeButton: Locator;
   readonly themeError: Locator;
-  readonly uploadPageYamlInput: Locator;
   readonly uploadPageYamlButton: Locator;
   readonly validationErrors: Locator;
   readonly publicPageLink: Locator;
@@ -25,7 +24,6 @@ export class DashboardPage {
     this.themeSelect = page.getByTestId("theme-select");
     this.saveThemeButton = page.getByTestId("save-theme-button");
     this.themeError = page.getByTestId("theme-error");
-    this.uploadPageYamlInput = page.getByTestId("upload-page-yaml-button").locator("input[type='file']");
     this.uploadPageYamlButton = page.getByTestId("upload-page-yaml-button").locator("button");
     this.validationErrors = page.getByTestId("validation-errors");
     this.publicPageLink = page.getByTestId("public-page-link");
@@ -64,8 +62,11 @@ export class DashboardPage {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const filePath = path.join(__dirname, "..", "fixtures", fileName);
+
+    const fileChooserPromise = this.page.waitForEvent("filechooser");
     await this.uploadPageYamlButton.click();
-    await this.uploadPageYamlInput.setInputFiles(filePath);
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles(filePath);
 
     await expect(this.uploadPageYamlButton).toContainText("Uploading");
     await expect(this.uploadPageYamlButton).toContainText("Upload YAML");
@@ -103,56 +104,57 @@ export class DashboardPage {
     await this.newProjectButton.click();
   }
 
-  async expectProjectInList(projectName: string): Promise<void> {
-    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+  async expectProjectInList(projectId: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectId}`);
     await expect(projectCard).toBeVisible();
   }
 
-  async uploadProjectYaml(projectName: string, fileName: string): Promise<void> {
-    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+  async uploadProjectYaml(projectId: string, fileName: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectId}`);
     const uploadButton = projectCard.getByTestId("upload-project-yaml-button").locator("button");
-    const uploadInput = projectCard.getByTestId("upload-project-yaml-button").locator("input[type='file']");
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const filePath = path.join(__dirname, "..", "fixtures", fileName);
 
+    const fileChooserPromise = this.page.waitForEvent("filechooser");
     await uploadButton.click();
-    await uploadInput.setInputFiles(filePath);
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles(filePath);
 
     await expect(uploadButton).toContainText("Uploading");
     await expect(uploadButton).toContainText("Upload YAML");
   }
 
-  async expectProjectValidationErrors(projectName: string): Promise<void> {
-    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+  async expectProjectValidationErrors(projectId: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectId}`);
     const validationErrors = projectCard.getByTestId("project-validation-errors");
     await expect(validationErrors).toBeVisible();
   }
 
   async getProjectOrder(): Promise<string[]> {
     const projectCards = await this.page.getByTestId(/project-list-item-/).all();
-    const projectNames: string[] = [];
+    const projectIds: string[] = [];
 
     for (const card of projectCards) {
       const testId = await card.getAttribute("data-testid");
       if (testId) {
-        const name = testId.replace("project-list-item-", "");
-        projectNames.push(name);
+        const id = testId.replace("project-list-item-", "");
+        projectIds.push(id);
       }
     }
 
-    return projectNames;
+    return projectIds;
   }
 
-  async clickProjectMoveUp(projectName: string): Promise<void> {
-    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+  async clickProjectMoveUp(projectId: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectId}`);
     const moveUpButton = projectCard.getByTestId("move-project-up-button");
     await moveUpButton.click();
   }
 
-  async clickProjectMoveDown(projectName: string): Promise<void> {
-    const projectCard = this.page.getByTestId(`project-list-item-${projectName}`);
+  async clickProjectMoveDown(projectId: string): Promise<void> {
+    const projectCard = this.page.getByTestId(`project-list-item-${projectId}`);
     const moveDownButton = projectCard.getByTestId("move-project-down-button");
     await moveDownButton.click();
   }

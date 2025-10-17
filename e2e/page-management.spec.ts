@@ -96,7 +96,7 @@ test.describe("Page Management", () => {
     await createProjectModal.clickCreate();
     await createProjectModal.waitForClose();
     await dashboard.expectSuccessToast("Project created successfully");
-    await dashboard.expectProjectInList("My Test Project");
+    await dashboard.expectProjectInList("my-test-project");
 
     // Verify project is visible on public page
     await publicPage.goto("test-user-page");
@@ -104,11 +104,11 @@ test.describe("Page Management", () => {
 
     // Phase 3: Upload Invalid Project YAML
     await dashboard.goto();
-    await dashboard.uploadProjectYaml("My Test Project", "invalid-project.yaml");
-    await dashboard.expectProjectValidationErrors("My Test Project");
+    await dashboard.uploadProjectYaml("my-test-project", "invalid-project.yaml");
+    await dashboard.expectProjectValidationErrors("my-test-project");
 
     // Phase 4: Upload Valid Project YAML
-    await dashboard.uploadProjectYaml("My Test Project", "valid-project.yaml");
+    await dashboard.uploadProjectYaml("my-test-project", "valid-project.yaml");
     await dashboard.expectSuccessToast("Project data updated successfully");
 
     // Navigate to public page and click project to view details
@@ -150,7 +150,7 @@ test.describe("Page Management", () => {
     await createProjectModal.clickCreate();
     await createProjectModal.waitForClose();
     await dashboard.expectSuccessToast("Project created successfully");
-    await dashboard.expectProjectInList("Project Alpha");
+    await dashboard.expectProjectInList("project-alpha");
 
     // Create Project Beta
     await dashboard.clickNewProject();
@@ -158,7 +158,7 @@ test.describe("Page Management", () => {
     await createProjectModal.clickCreate();
     await createProjectModal.waitForClose();
     await dashboard.expectSuccessToast("Project created successfully");
-    await dashboard.expectProjectInList("Project Beta");
+    await dashboard.expectProjectInList("project-beta");
 
     // Create Project Gamma
     await dashboard.clickNewProject();
@@ -166,7 +166,7 @@ test.describe("Page Management", () => {
     await createProjectModal.clickCreate();
     await createProjectModal.waitForClose();
     await dashboard.expectSuccessToast("Project created successfully");
-    await dashboard.expectProjectInList("Project Gamma");
+    await dashboard.expectProjectInList("project-gamma");
 
     // Phase 3: Verify Initial Order on Public Page
     await publicPage.goto("test-user-page");
@@ -174,11 +174,11 @@ test.describe("Page Management", () => {
 
     // Phase 4: Reorder Projects on Dashboard
     await dashboard.goto();
-    // Move "Project Gamma" to the top (click up twice)
-    await dashboard.clickProjectMoveUp("Project Gamma");
-    await dashboard.clickProjectMoveDown("Project Alpha");
+    // Move "Project Gamma" to the top
+    await dashboard.clickProjectMoveUp("project-gamma");
+    await dashboard.clickProjectMoveDown("project-alpha");
     // Verify order changed on dashboard
-    await dashboard.expectProjectOrder(["Project Gamma", "Project Alpha", "Project Beta"]);
+    await dashboard.expectProjectOrder(["project-gamma", "project-alpha", "project-beta"]);
     // Save the new order
     await dashboard.clickSaveProjectOrder();
 

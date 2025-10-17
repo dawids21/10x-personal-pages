@@ -159,7 +159,7 @@ export function ProjectListItem({
 
   return (
     <>
-      <Card data-testid={`project-list-item-${project.project_name}`}>
+      <Card data-testid={`project-list-item-${project.project_id}`}>
         <CardContent className="pt-2">
           <div className="flex items-start gap-4">
             <div className="flex-1 space-y-3">
