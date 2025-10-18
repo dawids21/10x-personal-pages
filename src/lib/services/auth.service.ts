@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/db/database.types";
-import { EmailAlreadyRegisteredError, InvalidCredentialsError, AuthServiceError } from "@/lib/errors/auth.errors";
+import {
+  EmailAlreadyRegisteredError,
+  InvalidCredentialsError,
+  AuthServiceError,
+  EmailNotConfirmedError,
+} from "@/lib/errors/auth.errors";
 
 type SupabaseServerClient = SupabaseClient<Database>;
 
@@ -31,6 +36,7 @@ export async function signUp(supabase: SupabaseServerClient, email: string, pass
 
 /**
  * Sign in an existing user with email and password.
+ * Throws EmailNotConfirmedError if email is not confirmed.
  * Throws InvalidCredentialsError if credentials are invalid.
  * Throws AuthServiceError for other Supabase errors.
  */
@@ -40,7 +46,16 @@ export async function signIn(supabase: SupabaseServerClient, email: string, pass
     password,
   });
 
-  if (error || !data.user) {
+  if (error) {
+    // Check if email is not confirmed
+    if (error.message.includes("Email not confirmed")) {
+      throw new EmailNotConfirmedError();
+    }
+    // Invalid credentials or other auth errors
+    throw new InvalidCredentialsError();
+  }
+
+  if (!data.user) {
     throw new InvalidCredentialsError();
   }
 

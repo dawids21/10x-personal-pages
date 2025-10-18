@@ -12,6 +12,7 @@ import {
   InvalidCredentialsError,
   AuthenticationRequiredError,
   AuthServiceError,
+  EmailNotConfirmedError,
 } from "../errors/auth.errors";
 
 /**
@@ -117,6 +118,18 @@ export function handleApiError(error: unknown): Response {
         },
       } as ErrorResponse),
       { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (error instanceof EmailNotConfirmedError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "EMAIL_NOT_CONFIRMED",
+          message: error.message,
+        },
+      } as ErrorResponse),
+      { status: 403, headers: { "Content-Type": "application/json" } }
     );
   }
 
