@@ -19,6 +19,16 @@ export class InvalidCredentialsError extends Error {
 }
 
 /**
+ * Error thrown when user tries to sign in with unconfirmed email.
+ */
+export class EmailNotConfirmedError extends Error {
+  constructor(message = "Email not confirmed") {
+    super(message);
+    this.name = "EmailNotConfirmedError";
+  }
+}
+
+/**
  * Error thrown when authentication is required but not provided.
  */
 export class AuthenticationRequiredError extends Error {

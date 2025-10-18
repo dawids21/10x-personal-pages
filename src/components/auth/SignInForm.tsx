@@ -61,7 +61,10 @@ export function SignInForm() {
       }
 
       // Handle error responses
-      if (response.status === 401) {
+      if (response.status === 403) {
+        // Email not confirmed
+        setError("Please verify your email address before signing in. Check your inbox for the verification link.");
+      } else if (response.status === 401) {
         setError("Invalid email or password");
       } else if (response.status === 500) {
         setError("An unexpected error occurred. Please try again.");
