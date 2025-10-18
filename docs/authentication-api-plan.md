@@ -6,8 +6,7 @@ This document specifies only the APIs required to deliver the trimmed Authentica
 
 Scope for this plan:
 - Email/password sign up with email verification link delivery
-- Email/password sign in
-- Resend verification for unverified sessions
+- Email/password sign in (blocks unverified users with 403 error)
 - Logout (optional server endpoint)
 - Verification handled by an SSR page (not an API endpoint) that exchanges the verification code and redirects
 
@@ -18,11 +17,10 @@ Out of scope for this plan (removed per feedback):
 - /api/auth/me endpoint (verification status is checked during server-side page rendering)
 
 Core user workflows:
-- Sign up: User submits email/password on /. Server creates the account and sends a verification email. User sees a “check your email” message.
+- Sign up: User submits email/password on /. Server creates the account and sends a verification email. User sees a "check your email" message.
 - Verify (SSR): The user clicks the verification link; an SSR page at /auth/callback exchanges the code for a session and redirects to the dashboard.
-- Sign in: User signs in via server API; a session cookie is established and the UI navigates to the dashboard.
-- Resend verification: Unverified, authenticated users can request a resend.
-- Access control: Public routes are "/" and "/page/*". All else is protected; verification is enforced at page render time via middleware/server rendering.
+- Sign in: User signs in via server API; returns 403 if email is not confirmed. Upon successful sign-in with verified email, a session cookie is established and the UI navigates to the dashboard.
+- Access control: Public routes are "/" and "/page/*". All else is protected; verification is enforced at sign-in time.
 
 2. API Endpoints
 
@@ -87,6 +85,10 @@ Response
   {
     "error": { "code": "unauthorized", "message": "Invalid credentials" }
   }
+- 403 Forbidden (email not confirmed)
+  {
+    "error": { "code": "EMAIL_NOT_CONFIRMED", "message": "Email not confirmed" }
+  }
 - 500 Internal Server Error
   {
     "error": { "code": "internal_error", "message": "Unexpected error" }
@@ -94,35 +96,10 @@ Response
 
 Notes
 - Call locals.supabase.auth.signInWithPassword({ email, password }).
-- Do not leak whether the user is verified here; protected content will enforce verification during SSR rendering.
+- Check if the error message contains "Email not confirmed" and throw EmailNotConfirmedError accordingly.
+- Return 403 status to prevent unverified users from signing in.
 
-2.3 POST /api/auth/resend-verification
-
-Purpose
-- Resends a verification email to the current unverified session’s user. Session-based to avoid email enumeration.
-
-Authentication/Authorization
-- Requires a valid Supabase session cookie.
-- If already verified, respond 204 (no-op).
-
-Request
-- No parameters or body.
-
-Response
-- 204 No Content
-- 401 Unauthorized (no session)
-  {
-    "error": { "code": "unauthorized", "message": "Authentication required" }
-  }
-- 500 Internal Server Error
-  {
-    "error": { "code": "internal_error", "message": "Unexpected error" }
-  }
-
-Notes
-- Call locals.supabase.auth.resend({ type: "signup" }).
-
-2.4 POST /api/auth/sign-out (optional)
+2.3 POST /api/auth/sign-out (optional)
 
 Purpose
 - Clears the session cookie server-side. Client-side sign-out via SDK is also acceptable; this endpoint centralizes SSR flows.
@@ -194,8 +171,7 @@ Success payloads
 
 4.1 Supabase Auth (Server SDK via locals.supabase)
 - Sign up: locals.supabase.auth.signUp with emailRedirectTo = APP_URL + "/auth/callback?type=signup".
-- Sign in: locals.supabase.auth.signInWithPassword; cookie set via server integration.
-- Resend verification: locals.supabase.auth.resend({ type: "signup" }).
+- Sign in: locals.supabase.auth.signInWithPassword; returns error if email not confirmed; cookie set via server integration.
 - Sign out (optional): locals.supabase.auth.signOut.
 
 Environment variables:
@@ -205,16 +181,16 @@ Environment variables:
 
 4.2 Middleware and Page Rendering
 - Public routes: "/" and "/page/*" do not require auth.
-- Protected routes (dashboard, protected APIs) require a valid session.
-- Verification enforcement: Perform check during server-side page rendering; deny access when email_confirmed_at is not set and render an interstitial or redirect as per app UX.
-- No /api/auth/me endpoint; session and verification status are derived server-side during SSR.
+- Protected routes (dashboard, protected APIs) require a valid verified session.
+- Verification enforcement: Enforced at sign-in time via 403 error; unverified users cannot sign in.
+- No /api/auth/me endpoint; session status is derived server-side during SSR.
 
 5. Technical Considerations
 
 5.1 Security
 - Email enumeration:
   - sign-up may return conflict for already-registered email; optionally downscope to a generic invalid_request if strict enumeration safety is desired.
-  - resend-verification is session-bound and accepts no email parameter.
+  - sign-in returns 403 for unverified emails, which may enable enumeration; consider if this is acceptable for your security posture.
 
 6. Endpoint Specifications Summary
 
@@ -224,14 +200,9 @@ POST /api/auth/sign-up
 - 200, 400, 409, 429, 500.
 
 POST /api/auth/sign-in
-- Desc: Authenticate and set session cookie.
+- Desc: Authenticate and set session cookie; blocks unverified users.
 - Auth: Public.
-- 200, 401, 429, 500.
-
-POST /api/auth/resend-verification
-- Desc: Resend verification to current session’s user.
-- Auth: Session required.
-- 204, 401, 429, 500.
+- 200, 401, 403, 429, 500.
 
 POST /api/auth/sign-out (optional)
 - Desc: Clear session cookie.
