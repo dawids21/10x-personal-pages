@@ -1,32 +1,20 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import pageTemplateContent from "@/assets/templates/page-template.yaml?raw";
+import projectTemplateContent from "@/assets/templates/project-template.yaml?raw";
 
 /**
  * Get the page template YAML content
  * @returns Page template as a string
- * @throws Error if template file cannot be read
  */
 export function getPageTemplate(): string {
-  try {
-    const templatePath = join(process.cwd(), "src/assets/templates/page-template.yaml");
-    return readFileSync(templatePath, "utf-8");
-  } catch (error) {
-    throw new Error(`Failed to read page template file ${error}`);
-  }
+  return pageTemplateContent;
 }
 
 /**
  * Get the project template YAML content
  * @returns Project template as a string
- * @throws Error if template file cannot be read
  */
 export function getProjectTemplate(): string {
-  try {
-    const templatePath = join(process.cwd(), "src/assets/templates/project-template.yaml");
-    return readFileSync(templatePath, "utf-8");
-  } catch (error) {
-    throw new Error(`Failed to read project template file ${error}`);
-  }
+  return projectTemplateContent;
 }
 
 /**
