@@ -11,6 +11,7 @@ import { useToast } from "@/components/dashboard/hooks/useToast";
 import { isErrorResponse, getValidationErrors } from "@/components/dashboard/dashboard.types";
 import type { CreatePageCommand, ErrorResponse, ValidationErrorDetail, Theme } from "@/types";
 import { Toaster } from "sonner";
+import { downloadFile } from "@/lib/download-helper";
 
 interface InitialPageSetupProps {
   baseUrl: string;
@@ -73,35 +74,7 @@ export function InitialPageSetup({ baseUrl }: InitialPageSetupProps) {
   };
 
   const handleDownloadTemplate = async () => {
-    try {
-      const response = await fetch("/api/templates/page");
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download template" } }));
-        const message = errorData.error?.message || "Failed to download template";
-
-        if (response.status === 401) {
-          // Authentication error - user should re-login
-          window.location.href = "/";
-          return;
-        }
-
-        showError(message);
-        return;
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "page-template.yaml";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.error("Error downloading template:", error);
-      showError("Failed to download template. Please try again.");
-    }
+    await downloadFile("/api/templates/page", "page-template.yaml", showError);
   };
 
   const clearErrors = () => {

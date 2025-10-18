@@ -10,6 +10,7 @@ import { useToast } from "@/components/dashboard/hooks/useToast";
 import { useFileUpload } from "@/components/dashboard/hooks/useFileUpload";
 import type { ProjectListItemProps } from "@/components/dashboard/dashboard.types";
 import type { UpdateProjectNameCommand, UpdateProjectDataCommand } from "@/types";
+import { downloadFile } from "@/lib/download-helper";
 
 export function ProjectListItem({
   project,
@@ -61,75 +62,11 @@ export function ProjectListItem({
   };
 
   const handleDownloadTemplate = async () => {
-    try {
-      const response = await fetch("/api/templates/project");
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: { message: "Failed to download template" } }));
-        const message = errorData.error?.message || "Failed to download template";
-
-        if (response.status === 401) {
-          // Authentication error - user should re-login
-          window.location.href = "/";
-          return;
-        }
-
-        showError(message);
-        return;
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "project-template.yaml";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.error("Error downloading template:", error);
-      showError("Failed to download template. Please try again.");
-    }
+    await downloadFile("/api/templates/project", "project-template.yaml", showError);
   };
 
   const handleDownloadYaml = async () => {
-    try {
-      const response = await fetch(`/api/projects/${project.project_id}/data`);
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: { message: "Failed to download project data" } }));
-        const message = errorData.error?.message || "Failed to download project data";
-
-        if (response.status === 401) {
-          // Authentication error - user should re-login
-          window.location.href = "/";
-          return;
-        }
-
-        if (response.status === 404) {
-          // Project not found or no data
-          showError("No project data available to download. Please upload content first.");
-          return;
-        }
-
-        showError(message);
-        return;
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${project.project_name}-data.yaml`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.error("Error downloading project YAML:", error);
-      showError("Failed to download project data. Please try again.");
-    }
+    await downloadFile(`/api/projects/${project.project_id}/data`, `${project.project_name}-data.yaml`, showError);
   };
 
   const handleDeleteConfirm = async () => {
