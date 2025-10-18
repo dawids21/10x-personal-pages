@@ -19,7 +19,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   // Use Node adapter for dev/test, Cloudflare for production
-  adapter: isProduction ? cloudflare() : node({ mode: "standalone" }),
+  adapter: isProduction ? cloudflare({ imageService: "compile" }) : node({ mode: "standalone" }),
   env: {
     schema: {
       SUPABASE_URL: envField.string({
