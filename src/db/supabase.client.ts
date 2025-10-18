@@ -2,9 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import type { AstroCookies } from "astro";
 import { type CookieOptionsWithName, createServerClient } from "@supabase/ssr";
 import type { Database } from "./database.types";
+import { SUPABASE_URL, SUPABASE_KEY } from "astro:env/server";
 
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
+const supabaseUrl = SUPABASE_URL;
+const supabaseAnonKey = SUPABASE_KEY;
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
